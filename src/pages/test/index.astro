@@ -1,0 +1,16 @@
+---
+import { DitherCanvas } from "../../components/DitherCanvas";
+import "../../styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>3D Dither Gallery</title>
+  </head>
+  <body class="m-0 p-0 h-screen">
+    <div id="canvas-container" class="w-64 h-64 bg-red-100">
+      <DitherCanvas client:load />
+    </div>
+  </body>
+</html>
