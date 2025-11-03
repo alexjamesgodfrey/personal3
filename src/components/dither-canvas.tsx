@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { DitherScene } from "../lib/threeDitherScene";
+import { DitherScene } from "../lib/three-dither-scene";
 
 export function DitherCanvas() {
   const ref = useRef<HTMLCanvasElement>(null);

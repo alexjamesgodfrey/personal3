@@ -1,7 +1,33 @@
 ---
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { validateNote } from "@/lib/validators";
 import Layout from "../layouts/BaseLayout.astro";
+
+const matches = import.meta.glob("../content/notes/*.{md,mdx}", {
+  eager: true,
+});
+const notes: any = Object.values(matches);
+
+console.log(notes);
+const parsedNotes = notes.map((note: any) => ({
+  ...note,
+  frontmatter: validateNote(note.frontmatter),
+}));
 ---
 
 <Layout>
-  <div class="dark:text-red-100">hi</div>
+  <div class="flex flex-col items-center w-full">
+    {
+      parsedNotes.map((note: any) => (
+        <Card className="font-mono w-5/6 max-w-xs">
+          <CardHeader className="font-semibold">
+            {note.frontmatter.title}
+          </CardHeader>
+          <CardContent className="text-sm">
+            <p>{note.frontmatter.description}</p>
+          </CardContent>
+        </Card>
+      ))
+    }
+  </div>
 </Layout>

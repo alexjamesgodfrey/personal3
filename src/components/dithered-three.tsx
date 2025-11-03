@@ -1,4 +1,4 @@
-import { DitherCanvas } from "./DitherCanvas";
+import { DitherCanvas } from "./dither-canvas";
 
 export function DitheredThree() {
   return (
