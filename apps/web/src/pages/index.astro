@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from '@alexgodfrey/ui/components/ui/car
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
 import { validateNote } from '@alexgodfrey/web/lib/validators';
 
-const matches = import.meta.glob('@alexgodfrey/web/content/notes/*.{md,mdx}', {
+const matches = import.meta.glob('@alexgodfrey/web/content/notes/**/*.{md,mdx}', {
   eager: true,
 });
 const notes: any = Object.values(matches);
