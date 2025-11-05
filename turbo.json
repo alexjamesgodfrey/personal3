@@ -9,7 +9,7 @@
       "dependsOn": ["^dev"]
     },
     "build": {
-      "inputs": [".env*"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".vercel/**", ".output/**"]
     },
