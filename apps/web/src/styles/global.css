@@ -1,0 +1,4 @@
+@import '@alexgodfrey/ui/styles/globals.css';
+
+@source "./src/**/*.{js,jsx,ts,tsx}";
+@source "@alexgodfrey/ui/src/**/*.{js,jsx,ts,tsx}";

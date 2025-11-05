@@ -1,0 +1,41 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local", "pnpm-lock.yaml", ".env*"],
+  "globalEnv": [],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^dev"]
+    },
+    "build": {
+      "inputs": [".env*"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**", ".vercel/**", ".output/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": []
+    },
+    "format": {
+      "dependsOn": ["^format"],
+      "outputs": []
+    },
+    "format:check": {
+      "dependsOn": ["^format:check"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "outputs": ["coverage/**"]
+    },
+    "clean": {
+      "dependsOn": ["^clean"],
+      "outputs": []
+    }
+  }
+}
