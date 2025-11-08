@@ -25,19 +25,14 @@ const cells: Cell[] = [
 
 <Layout>
   <div class="relative w-full h-screen overflow-hidden bg-background">
-    <!--
-      No layout shift:
-      - MasonryGrid does all packing up-front with percentages horizontally,
-        so it doesn't need to measure on the client.
-      - Absolute-positioned children use computed px heights; bottom items stretch
-        to eliminate remaining blank space vertically.
-    -->
     <MasonryGrid cells={cells} className="absolute inset-0 overflow-auto p-2" columns={4} gap={8} />
 
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <!-- Change from absolute to fixed -->
+    <div class="fixed inset-0 flex items-center justify-center pointer-events-none">
       <div
         class="bg-background/95 backdrop-blur-sm p-8 rounded-xl border-2 border-border shadow-2xl pointer-events-auto"
       >
+        <!-- rest of your card content -->
         <div class="absolute flex items-center gap-1 top-1 left-1">
           <Logo name={Logos.SHV} className="w-6 h-4" />
           <a href="https://conquer.onetwentyone.ai">
@@ -58,7 +53,6 @@ const cells: Cell[] = [
           <Logo name={Logos.AWS} className="size-4" />
           <Logo name={Logos.PostgreSQL} className="size-4" />
         </div>
-        <!-- fill the grid reverse -->
         <div class="absolute bottom-1 right-1 grid grid-cols-8 gap-1 grid-column-start">
           <Logo name={Logos.Swift} className="size-4" />
           <Logo name={Logos.Sentry} className="size-4" />

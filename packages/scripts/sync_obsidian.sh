@@ -13,6 +13,9 @@ fi
 # Ensure DEST exists as a normal folder
 mkdir -p "$DEST"
 
+# Also clear the dest folder
+rm -rf "$DEST"/*
+
 # Step 1: Sync all files (dereferencing symlinks, preserving structure)
 echo "📦 Syncing Obsidian notes..."
 rsync -avh --delete --copy-links "$SOURCE" "$DEST"
