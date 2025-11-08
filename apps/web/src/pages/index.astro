@@ -11,7 +11,7 @@ const cells: Cell[] = [
   { width: 2, height: 200, id: '' },
   { width: 1, height: 120, id: '' },
   { width: 1, height: 180, id: '' },
-  { width: 3, height: 120, id: 'bedroom-humidity' },
+  { width: 2, height: 120, id: 'bedroom-humidity' },
   { width: 1, height: 220, id: '' },
   { width: 2, height: 160, id: '' },
   { width: 1, height: 190, id: '' },
@@ -42,15 +42,34 @@ const cells: Cell[] = [
       >
         <div class="absolute flex items-center gap-1 top-1 left-1">
           <Logo name={Logos.SHV} className="w-6 h-4" />
-          <Logo name={Logos.OneTwentyOne} className="size-4.5" />
-          <Logo name={Logos.Altum} className="size-5 text-green-500" />
+          <a href="https://conquer.onetwentyone.ai">
+            <Logo name={Logos.OneTwentyOne} className="size-4.5" />
+          </a>
+          <a href="/resources/Letter%20of%20rec%20for%20Alex.pdf">
+            <Logo
+              name={Logos.Altum}
+              className="size-5 text-green-500 cursor-pointer hover:text-green-600"
+            />
+          </a>
+          <Logo name={Logos.Cornell} className="size-4" />
         </div>
         <h1 class="font-mono font-semibold text-2xl text-foreground">Alex Godfrey</h1>
         <p class="font-mono text-sm text-muted-foreground font-semibold">Fullstack // Bio</p>
-        <div class="absolute bottom-1 right-1 flex items-center gap-1 flex-row-reverse">
-          <Logo name={Logos.TypeScript} className="size-4" />
-          <Logo name={Logos.Next} className="size-4" />
+        <div class="absolute bottom-6 right-1 grid-rows-8 space-y-1">
+          <Logo name={Logos.Bun} className="size-4" />
+          <Logo name={Logos.AWS} className="size-4" />
           <Logo name={Logos.PostgreSQL} className="size-4" />
+        </div>
+        <!-- fill the grid reverse -->
+        <div class="absolute bottom-1 right-1 grid grid-cols-8 gap-1 grid-column-start">
+          <Logo name={Logos.Swift} className="size-4" />
+          <Logo name={Logos.Sentry} className="size-4" />
+          <Logo name={Logos.Astro} className="size-4" />
+          <Logo name={Logos.ReactRouter} className="size-4" />
+          <Logo name={Logos.Next} className="size-4" />
+          <Logo name={Logos.Tailwind} className="size-4" />
+          <Logo name={Logos.React} className="size-4" />
+          <Logo name={Logos.TypeScript} className="size-4" />
         </div>
       </div>
     </div>

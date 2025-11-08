@@ -20,6 +20,11 @@ export enum Logos {
   'Sass' = '/logos/sass.svg',
   'Swift' = '/logos/swift.svg',
   'DigitalOcean' = '/logos/digital-ocean.svg',
+  'Astro' = '/logos/astro.svg',
+  'ReactRouter' = '/logos/react-router.svg',
+  'Bun' = '/logos/bun.svg',
+  'Sentry' = '/logos/sentry.svg',
+  'Cornell' = '/logos/cornell.png',
 }
 
 export function Logo({ name, className }: { name: Logos; className?: string }) {
