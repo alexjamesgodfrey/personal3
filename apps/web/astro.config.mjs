@@ -10,6 +10,10 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   env: {
-    schema: { CHATDB_URL: envField.string({ context: 'client', access: 'public' }) },
+    schema: {
+      CHATDB_URL: envField.string({ context: 'client', access: 'public' }),
+      AGENTDB_API_URL: envField.string({ context: 'server', access: 'public' }),
+      AGENTDB_API_KEY: envField.string({ context: 'server', access: 'secret' }),
+    },
   },
 });

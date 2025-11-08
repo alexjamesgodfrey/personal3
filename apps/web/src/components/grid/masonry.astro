@@ -1,0 +1,160 @@
+---
+import type { Cell } from '../../types';
+
+interface Props {
+  cells: Cell[];
+  columns?: number;
+  gap?: number;
+  className?: string;
+}
+
+type PackedPosition = {
+  xPct: number;
+  widthPct: number;
+  y: number;
+  height: number;
+};
+
+type PackOptions = {
+  minimizeWaste?: boolean;
+  stretchBottom?: boolean;
+};
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function simulateBottomsForHeight(
+  positions: PackedPosition[],
+  cells: Cell[],
+  columns: number,
+  gap: number,
+) {
+  const bottoms = new Array<number>(columns).fill(gap);
+
+  positions.forEach((pos, idx) => {
+    const span = clamp(cells[idx].width, 1, columns);
+    const colStart = Math.round((pos.xPct / 100) * columns);
+    const y = pos.y;
+    const h = pos.height;
+    for (let i = colStart; i < colStart + span; i++) {
+      bottoms[i] = Math.max(bottoms[i], y + h + gap);
+    }
+  });
+
+  return bottoms;
+}
+
+function packMasonryPercent(
+  cells: Cell[],
+  columns: number,
+  gap: number,
+  opts: PackOptions,
+): { positions: PackedPosition[]; totalHeight: number } {
+  const colPct = 100 / columns;
+  const positions: PackedPosition[] = [];
+
+  const columnBottoms = new Array<number>(columns).fill(gap);
+  const lastIndexForColumn = new Array<number>(columns).fill(-1);
+
+  cells.forEach((cell, index) => {
+    const span = clamp(cell.width, 1, columns);
+
+    let bestCol = 0;
+    let bestMax = Number.POSITIVE_INFINITY;
+    let bestWaste = Number.POSITIVE_INFINITY;
+
+    for (let col = 0; col <= columns - span; col++) {
+      const slice = columnBottoms.slice(col, col + span);
+      const maxHeight = Math.max(...slice);
+      if (opts.minimizeWaste) {
+        const waste = slice.reduce((acc, h) => acc + (maxHeight - h), 0);
+        if (maxHeight < bestMax || (maxHeight === bestMax && waste < bestWaste)) {
+          bestMax = maxHeight;
+          bestWaste = waste;
+          bestCol = col;
+        }
+      } else {
+        if (maxHeight < bestMax) {
+          bestMax = maxHeight;
+          bestCol = col;
+        }
+      }
+    }
+
+    const xPct = bestCol * colPct;
+    const widthPct = span * colPct;
+    const y = bestMax;
+    const height = cell.height;
+
+    positions.push({ xPct, widthPct, y, height });
+
+    for (let i = bestCol; i < bestCol + span; i++) {
+      columnBottoms[i] = y + height + gap;
+      lastIndexForColumn[i] = index;
+    }
+  });
+
+  if (opts.stretchBottom) {
+    const targetBottom = Math.max(...columnBottoms);
+    const extraByItem = new Map<number, number>();
+
+    for (let c = 0; c < columns; c++) {
+      const idx = lastIndexForColumn[c];
+      if (idx === -1) continue;
+
+      const currentBottom = columnBottoms[c];
+      const leftover = targetBottom - currentBottom;
+      if (leftover > 0) {
+        extraByItem.set(idx, Math.max(extraByItem.get(idx) ?? 0, leftover));
+      }
+    }
+
+    extraByItem.forEach((extra, idx) => {
+      positions[idx].height += extra;
+    });
+  }
+
+  const finalColumnBottoms = simulateBottomsForHeight(positions, cells, columns, gap);
+  const totalHeight = Math.max(...finalColumnBottoms) + gap;
+
+  return { positions, totalHeight };
+}
+
+const { cells, columns = 4, gap = 8, className = '' } = Astro.props;
+
+const { positions, totalHeight } = packMasonryPercent(cells, columns, gap, {
+  minimizeWaste: true,
+  stretchBottom: true,
+});
+
+const cellComponents: Record<string, any> = {
+  'bedroom-humidity': (await import('./bedroom-humidity.astro')).default,
+  //   cellpaint: (await import('./cellpaint.astro')).default,
+};
+---
+
+<div class={className} style="position: relative;">
+  <div style={`height: ${totalHeight}px; width: 100%; position: relative;`}>
+    {
+      cells.map((cell, index) => {
+        const pos = positions[index];
+        const CellComponent = cellComponents[cell.id];
+
+        return (
+          <div
+            class="absolute border overflow-hidden"
+            style={`
+            left: calc(${pos.xPct}% + ${gap}px);
+            top: ${pos.y}px;
+            width: calc(${pos.widthPct}% - ${gap * 2}px);
+            height: ${pos.height}px;
+          `}
+          >
+            {CellComponent ? <CellComponent /> : `Cell ${index}`}
+          </div>
+        );
+      })
+    }
+  </div>
+</div>

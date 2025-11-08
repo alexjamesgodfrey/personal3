@@ -1,0 +1,68 @@
+---
+// import { Card, CardContent, CardHeader } from '@alexgodfrey/ui/components/ui/card';
+import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import { validateNote } from '@alexgodfrey/web/lib/validators';
+
+const matches = import.meta.glob('@alexgodfrey/web/content/notes/**/*.{md,mdx}', {
+  eager: true,
+});
+const notes: any = Object.values(matches);
+
+console.log(notes);
+const parsedNotes = notes.map((note: any) => ({
+  ...note,
+  frontmatter: validateNote(note.frontmatter),
+}));
+---
+
+<Layout>
+  <div class="flex flex-col items-center justify-center w-full h-screen">
+    <div>
+      <h1 class="font-mono font-semibold text-2xl text-foreground">Alex Godfrey</h1>
+      <p class="font-mono text-sm text-muted-foreground font-semibold">Fullstack // Bio</p>
+    </div>
+  </div>
+  <!-- <div class="w-[36rem] h-96"> -->
+  <!-- <iframe
+        src={constructChatdbUrl({
+          appId: 'a2c51623-badd-4ef2-a830-e7c39a1df343',
+          chartId: 'ed128381-7274-4391-ac88-e7a1ef322798',
+          hideHeader: false,
+          hideFooter: true,
+          hideTitle: false,
+          hideXAxis: false,
+          hideYAxis: false,
+        })}
+        title="Top 10 Most Observed Crocodile Species"
+        loading="lazy"
+        style="border:0;width:100%;height:100%;border-radius:16px;display:block;"
+        allow="clipboard-read; clipboard-write"></iframe> -->
+  <!-- </div> -->
+  <!-- <div class="w-[36rem] h-96">
+      <iframe
+        src={constructChatdbUrl({
+          appId: '060656aa-134e-4cb2-a5d4-29009fb7b006',
+          chartId: 'de52f69e-c347-4b75-b154-ddda38ffc4f6',
+          hideHeader: false,
+          hideFooter: true,
+          hideTitle: false,
+          hideXAxis: false,
+          hideYAxis: false,
+        })}
+        title="Top 10 Most Observed Crocodile Species"
+        loading="lazy"
+        style="border:0;width:100%;height:100%;border-radius:16px;display:block;"
+        allow="clipboard-read; clipboard-write"></iframe>
+    </div> -->
+  <!-- 
+    {
+      parsedNotes.map((note: any) => (
+        <Card className="font-mono w-5/6 max-w-xs">
+          <CardHeader className="font-semibold">{note.frontmatter.title}</CardHeader>
+          <CardContent className="text-sm">
+            <p>{note.frontmatter.description}</p>
+          </CardContent>
+        </Card>
+      ))
+    } -->
+</Layout>
