@@ -1,0 +1,67 @@
+---
+import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import { validateNote } from '@alexgodfrey/web/lib/validators';
+import { getCollection, render } from 'astro:content';
+
+export const prerender = true;
+
+// Generate static paths for all notes
+export async function getStaticPaths() {
+  const allNotes = await getCollection('notes');
+  return allNotes.map((note) => {
+    // Extract slug from the file path
+    // e.g., "ascorbic-acid-ph/index.mdx" -> "ascorbic-acid-ph"
+    // e.g., "test.mdx" -> "test"
+    const slug = note.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+    return {
+      params: { slug },
+      props: { note },
+    };
+  });
+}
+
+const { note } = Astro.props;
+const frontmatter = validateNote(note.data);
+const { Content } = await render(note);
+---
+
+<Layout title={frontmatter.title} description={frontmatter.description}>
+  <article class="max-w-3xl mx-auto px-4 py-8">
+    <header class="mb-8">
+      <h1 class="font-mono font-semibold text-3xl text-foreground mb-2">
+        {frontmatter.title}
+      </h1>
+      {
+        frontmatter.description && (
+          <p class="font-mono text-sm text-muted-foreground mb-4">{frontmatter.description}</p>
+        )
+      }
+      <div class="font-mono text-xs text-muted-foreground">
+        <time datetime={frontmatter.pubDate.toISOString()}>
+          Published: {
+            frontmatter.pubDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }
+        </time>
+        {
+          frontmatter.updatedDate && (
+            <time datetime={frontmatter.updatedDate.toISOString()} class="ml-4">
+              Updated:{' '}
+              {frontmatter.updatedDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </time>
+          )
+        }
+      </div>
+    </header>
+    <div class="prose prose-invert max-w-none">
+      <Content />
+    </div>
+  </article>
+</Layout>

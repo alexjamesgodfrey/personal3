@@ -4,6 +4,7 @@ import type { Cell } from '../../types';
 // Import all cell components statically (required for server:defer)
 import BedroomHumidity from './bedroom-humidity.astro';
 import { LoadingFallback } from './loading-fallback';
+import { RenderCell } from './render-cell';
 // import CellPaint from './cells/cell-paint.astro';
 // Add more imports here as you create them
 
@@ -176,7 +177,9 @@ const serverIslands = new Set(['bedroom-humidity']);
               // )
               `Cell ${index}`
             ) : (
-              `Cell ${index}`
+              <div class="w-full h-full flex items-center justify-center">
+                <RenderCell id={cell.id} />
+              </div>
             )}
           </div>
         );

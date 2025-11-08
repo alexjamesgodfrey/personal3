@@ -2,6 +2,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { getHumidity } from '../../lib/agent-db';
 import OptimalityCard from '../conquer/optimality-card.tsx';
+import Icon from '../icon-sprite';
 
 // Call the database function directly - no HTTP request needed!
 const row = await getHumidity('studioSerial');
@@ -57,9 +58,11 @@ const data = {
 <div class="flex flex-col justify-between">
   <OptimalityCard {...data} client:load />
   <div class="flex gap-2 font-mono px-2 text-sm">
-    <p>Live Data</p>
-    <p>• ChatDB Airthings Integration</p>
+    <p>Live Data via ChatDB Airthings Integration</p>
     <p>• UI from 121</p>
-    <p>• Read the blog</p>
+    <a href="/blog/chatdb-airthings" class="flex items-center gap-1 hover:underline">
+      <p>• How it works</p>
+      <Icon name="arrowUpRight" className="size-4" />
+    </a>
   </div>
 </div>
