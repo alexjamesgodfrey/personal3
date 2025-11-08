@@ -1,6 +1,12 @@
 ---
 import type { Cell } from '../../types';
 
+// Import all cell components statically (required for server:defer)
+import BedroomHumidity from './bedroom-humidity.astro';
+import { LoadingFallback } from './loading-fallback';
+// import CellPaint from './cells/cell-paint.astro';
+// Add more imports here as you create them
+
 interface Props {
   cells: Cell[];
   columns?: number;
@@ -128,10 +134,9 @@ const { positions, totalHeight } = packMasonryPercent(cells, columns, gap, {
   stretchBottom: true,
 });
 
-const cellComponents: Record<string, any> = {
-  'bedroom-humidity': (await import('./bedroom-humidity.astro')).default,
-  //   cellpaint: (await import('./cellpaint.astro')).default,
-};
+// Define which cells should be server islands (with defer)
+// Add cell IDs here to make them load dynamically with fresh data
+const serverIslands = new Set(['bedroom-humidity']);
 ---
 
 <div class={className} style="position: relative;">
@@ -139,7 +144,7 @@ const cellComponents: Record<string, any> = {
     {
       cells.map((cell, index) => {
         const pos = positions[index];
-        const CellComponent = cellComponents[cell.id];
+        const isServerIsland = serverIslands.has(cell.id);
 
         return (
           <div
@@ -151,7 +156,28 @@ const cellComponents: Record<string, any> = {
             height: ${pos.height}px;
           `}
           >
-            {CellComponent ? <CellComponent /> : `Cell ${index}`}
+            {/* Render based on cell ID */}
+            {cell.id === 'bedroom-humidity' ? (
+              isServerIsland ? (
+                <BedroomHumidity server:defer>
+                  <LoadingFallback slot="fallback" />
+                </BedroomHumidity>
+              ) : (
+                <BedroomHumidity />
+              )
+            ) : cell.id === 'cellpaint' ? (
+              // Uncomment when you create this component:
+              // isServerIsland ? (
+              //   <CellPaint server:defer>
+              //     <LoadingFallback slot="fallback" />
+              //   </CellPaint>
+              // ) : (
+              //   <CellPaint />
+              // )
+              `Cell ${index}`
+            ) : (
+              `Cell ${index}`
+            )}
           </div>
         );
       })

@@ -4,6 +4,8 @@ import MasonryGrid from '../components/grid/masonry.astro';
 import { Logo, Logos } from '../components/utilities/logo';
 import type { Cell } from '../types';
 
+export const prerender = true;
+
 const cells: Cell[] = [
   { width: 1, height: 200, id: 'cellpaint' },
   { width: 2, height: 200, id: '' },

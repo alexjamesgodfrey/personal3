@@ -1,17 +1,18 @@
 ---
 import { formatDistanceToNow } from 'date-fns';
+import { getHumidity } from '../../lib/agent-db';
 import OptimalityCard from '../conquer/optimality-card.tsx';
 
-// Use absolute URL for SSR fetch (Astro.url gives you the request URL)
-const baseUrl = Astro.url.origin || 'http://localhost:4321';
-const response = await fetch(`${baseUrl}/api/db/airthings/humidity`).then((r) => r.json());
+// Call the database function directly - no HTTP request needed!
+const row = await getHumidity('studioSerial');
 
-const humidity = response.data.humidity;
+const humidity = row?.value ?? 50; // Fallback to 50 if no data
+const recorded = row?.recorded ?? new Date();
+1;
 const utcDate = new Date(
-  response.data.recorded + (response.data.recorded.endsWith('Z') ? '' : 'Z'),
+  typeof recorded === 'string' ? recorded + (recorded.endsWith('Z') ? '' : 'Z') : recorded,
 );
 
-// Use 'as const' to get proper literal types
 const optimality = (
   humidity >= 40 && humidity <= 60 ? 'optimal' : humidity < 40 ? 'lower' : 'higher'
 ) as 'optimal' | 'lower' | 'higher';
