@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local", "pnpm-lock.yaml", ".env*"],
-  "globalEnv": ["CHATDB_URL"],
+  "globalEnv": ["CHATDB_URL", "AGENTDB_API_URL", "AGENTDB_API_KEY"],
   "tasks": {
     "dev": {
       "cache": false,
