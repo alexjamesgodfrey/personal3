@@ -1,56 +1,179 @@
 ---
 import { formatDistanceToNow } from 'date-fns';
-import { getHumidity } from '../../lib/agent-db';
+import { getCO2, getHumidity, getRadon, type Room } from '../../lib/agent-db';
 import OptimalityCard from '../conquer/optimality-card.tsx';
 
-// Call the database function directly - no HTTP request needed!
-const row = await getHumidity('studioSerial');
+interface Props {
+  queryType: 'humidity' | 'co2' | 'radon';
+  serial: Room;
+  label: string;
+  location: string;
+}
 
-const humidity = row?.value ?? 50; // Fallback to 50 if no data
+const { queryType, serial, label, location } = Astro.props;
+
+// Fetch latest record based on query type
+const row =
+  queryType === 'humidity'
+    ? await getHumidity(serial)
+    : queryType === 'co2'
+      ? await getCO2(serial)
+      : await getRadon(serial);
+
+const value = row?.value ?? 50;
 const recorded = row?.recorded ?? new Date();
-1;
+
 const utcDate = new Date(
   typeof recorded === 'string' ? recorded + (recorded.endsWith('Z') ? '' : 'Z') : recorded,
 );
 
+// Define optimal thresholds
+const humidityOptimalMin = 40;
+const humidityOptimalMax = 60;
+
+// ✅ Updated CO₂ ranges per your latest spec
+const co2OptimalMin = 0;
+const co2OptimalMax = 600;
+
+// ✅ Radon thresholds (WHO & EPA guidance)
+const radonOptimalMin = 0;
+const radonOptimalMax = 100; // Safe
+const radonHighRisk = 300; // Dangerous
+
+// Choose correct thresholds
+const optimalMin =
+  queryType === 'humidity'
+    ? humidityOptimalMin
+    : queryType === 'co2'
+      ? co2OptimalMin
+      : radonOptimalMin;
+
+const optimalMax =
+  queryType === 'humidity'
+    ? humidityOptimalMax
+    : queryType === 'co2'
+      ? co2OptimalMax
+      : radonOptimalMax;
+
+// Determine optimality level
 const optimality = (
-  humidity >= 40 && humidity <= 60 ? 'optimal' : humidity < 40 ? 'lower' : 'higher'
+  value >= optimalMin && value <= optimalMax ? 'optimal' : value < optimalMin ? 'lower' : 'higher'
 ) as 'optimal' | 'lower' | 'higher';
 
+// Define ranges dynamically
+const ranges =
+  queryType === 'humidity'
+    ? [
+        {
+          label: 'Too Dry',
+          color: 'bg-red-500',
+          min: 0,
+          max: optimalMin,
+          ...(value < optimalMin && { progress: value / optimalMin }),
+        },
+        {
+          label: 'Optimal',
+          color: 'bg-green-500',
+          min: optimalMin,
+          max: optimalMax,
+          ...(value >= optimalMin &&
+            value <= optimalMax && {
+              progress: (value - optimalMin) / (optimalMax - optimalMin),
+            }),
+        },
+        {
+          label: 'Mold Risk',
+          color: 'bg-red-500',
+          min: optimalMax,
+          max: 100,
+          ...(value > optimalMax && {
+            progress: (value - optimalMax) / (100 - optimalMax),
+          }),
+        },
+      ]
+    : queryType === 'co2'
+      ? [
+          {
+            label: 'Optimal',
+            color: 'bg-green-500',
+            min: co2OptimalMin,
+            max: co2OptimalMax,
+            ...(value >= co2OptimalMin &&
+              value <= co2OptimalMax && {
+                progress: (value - co2OptimalMin) / (co2OptimalMax - co2OptimalMin),
+              }),
+          },
+          {
+            label: 'Too High',
+            color: 'bg-red-500',
+            min: co2OptimalMax,
+            max: 5000,
+            ...(value > co2OptimalMax && {
+              progress: (value - co2OptimalMax) / (5000 - co2OptimalMax),
+            }),
+          },
+        ]
+      : [
+          {
+            label: 'Safe',
+            color: 'bg-green-500',
+            min: radonOptimalMin,
+            max: radonOptimalMax,
+            ...(value >= radonOptimalMin &&
+              value <= radonOptimalMax && {
+                progress: (value - radonOptimalMin) / (radonOptimalMax - radonOptimalMin),
+              }),
+          },
+          {
+            label: 'Elevated',
+            color: 'bg-yellow-500',
+            min: radonOptimalMax,
+            max: radonHighRisk,
+            ...(value > radonOptimalMax &&
+              value <= radonHighRisk && {
+                progress: (value - radonOptimalMax) / (radonHighRisk - radonOptimalMax),
+              }),
+          },
+          {
+            label: 'High Risk',
+            color: 'bg-red-500',
+            min: radonHighRisk,
+            max: 1000,
+            ...(value > radonHighRisk && {
+              progress: (value - radonHighRisk) / (1000 - radonHighRisk),
+            }),
+          },
+        ];
+
+// Status label for display
+const statusLabel =
+  queryType === 'humidity'
+    ? value < optimalMin
+      ? 'Too Dry'
+      : value > optimalMax
+        ? 'Mold Risk'
+        : 'Optimal'
+    : queryType === 'co2'
+      ? value > co2OptimalMax
+        ? 'Too High'
+        : 'Optimal'
+      : value <= radonOptimalMax
+        ? 'Safe'
+        : value <= radonHighRisk
+          ? 'Elevated'
+          : 'High Risk';
+
+// Units
+const unit = queryType === 'humidity' ? '%' : queryType === 'co2' ? ' ppm' : ' Bq/m³';
+
+// Assemble display data
 const data = {
-  label: 'Humidity',
-  description: `Bedroom · ${formatDistanceToNow(utcDate, { addSuffix: true })}`,
-  value: `${humidity}%`,
-  statusLabel: humidity < 40 ? 'Too Dry' : humidity > 60 ? 'Mold Risk' : 'Optimal',
+  label,
+  description: `${location} · ${formatDistanceToNow(utcDate, { addSuffix: true })}`,
+  value: `${value}${unit}`,
+  statusLabel,
   optimality,
-  ranges: [
-    {
-      label: 'Too Dry',
-      color: 'bg-red-500',
-      min: 0,
-      max: 40,
-      ...(humidity < 40 && { progress: humidity / 40 }),
-    },
-    {
-      label: 'Optimal',
-      color: 'bg-green-500',
-      min: 40,
-      max: 60,
-      ...(humidity >= 40 &&
-        humidity <= 60 && {
-          progress: (humidity - 40) / 20,
-        }),
-    },
-    {
-      label: 'Mold Risk',
-      color: 'bg-red-500',
-      min: 60,
-      max: 100,
-      ...(humidity > 60 && {
-        progress: (humidity - 60) / 40,
-      }),
-    },
-  ],
+  ranges,
 };
 ---
 

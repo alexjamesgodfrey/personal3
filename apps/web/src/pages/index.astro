@@ -2,6 +2,7 @@
 import { Button } from '@alexgodfrey/ui/components/ui/button';
 import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import OptimalityCard from '../components/conquer/optimality-card';
 import BedroomHumidity from '../components/grid/bedroom-humidity.astro';
 import { HumanOrMachine } from '../components/human-or-machine';
 import ProfileCard from '../components/profile-card.astro';
@@ -28,7 +29,7 @@ const cells: Cell[] = [
 
 <Layout>
   <div class="relative w-full min-h-[300vh] bg-background flex flex-col">
-    <div class="lg:mt-48 mx-24 flex flex-col space-y-8">
+    <div class="lg:mt-24 mx-24 flex flex-col space-y-8">
       <div
         class="font-mono border-l border-muted-foreground/30 text-muted-foreground/80 text-sm flex px-8 items-center gap-2"
       >
@@ -70,22 +71,99 @@ const cells: Cell[] = [
       </div>
       <div class="px-8 mt-12 border-l border-r border-muted-foreground/30 grid-rows-3">
         <div class="grid grid-cols-2">
-          <div class="h-20 border"><BedroomHumidity client:load /></div>
-          <div class="h-20 border">hi</div>
+          <div class="h-60 flex flex-col border">
+            <BedroomHumidity
+              queryType="humidity"
+              serial="bedroomSerial"
+              label="Humidity"
+              location="Bedroom"
+              server:defer
+            >
+              <OptimalityCard
+                slot="fallback"
+                label="Humidity"
+                description="Bedroom"
+                statusLabel="Loading"
+                optimality="optimal"
+                value="scramble"
+                ranges={[
+                  { label: 'Too Dry', color: 'bg-red-500', min: 0, max: 40 },
+                  { label: 'Optimal', color: 'bg-green-500', min: 40, max: 60, progress: 0.5 },
+                  { label: 'Mold Risk', color: 'bg-red-500', min: 60, max: 100 },
+                ]}
+              />
+            </BedroomHumidity>
+
+            <BedroomHumidity
+              queryType="co2"
+              serial="bedroomSerial"
+              label="CO₂"
+              location="Living Room"
+              server:defer
+            >
+              <OptimalityCard
+                slot="fallback"
+                label="CO₂"
+                description="Living Room"
+                statusLabel="Loading"
+                optimality="optimal"
+                value="scramble"
+                ranges={[
+                  { label: 'Too High', color: 'bg-red-500', min: 600, max: 5000 },
+                  { label: 'Optimal', color: 'bg-green-500', min: 0, max: 600, progress: 0.5 },
+                ]}
+              />
+            </BedroomHumidity>
+
+            <BedroomHumidity
+              queryType="radon"
+              serial="studioSerial"
+              label="Radon"
+              location="Studio"
+              server:defer
+            >
+              <OptimalityCard
+                slot="fallback"
+                label="Radon"
+                description="Studio"
+                statusLabel="Loading"
+                optimality="optimal"
+                value="scramble"
+                ranges={[
+                  { label: 'Safe', color: 'bg-green-500', min: 0, max: 100, progress: 0.5 },
+                  { label: 'Elevated', color: 'bg-yellow-500', min: 100, max: 300 },
+                  { label: 'High Risk', color: 'bg-red-500', min: 300, max: 1000 },
+                ]}
+              />
+            </BedroomHumidity>
+          </div>
+          <div class="h-60 border">Two blog posts here</div>
         </div>
         <div class="grid grid-cols-5">
-          <div class="h-20 border col-span-2">hi</div>
+          <div class="border col-span-2 grid grid-rows-2">
+            <div class="border-r">Altum labs here</div>
+            <!-- video that autoplays and loops -->
+            <div class="border pt-2">
+              <video
+                src="/videos/cellpaint.mp4"
+                autoplay
+                loop
+                muted
+                playsinline
+                class="w-full h-full object-cover"></video>
+            </div>
+          </div>
           <div class="border col-span-2">
             <div class="grid-cols-2">
               <img src="/images/conquer-biomark.png" alt="Conquer Biomark" />
-              <div class="border-t">hi</div>
+              <div class="border-t">ChatDB here</div>
             </div>
           </div>
           <div class="border"><img src="/images/121health.webp" alt="Conquer Biomark" /></div>
         </div>
         <div class="grid grid-cols-3">
           <div class="h-20 border"></div>
-          <div class="h-20 border">hi</div>
+          <div class="h-20 border">Altum Labs Here</div>
           <ProfileCard />
         </div>
       </div>

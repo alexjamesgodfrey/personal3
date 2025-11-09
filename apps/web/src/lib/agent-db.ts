@@ -12,6 +12,8 @@ const AirthingsConfig = {
   },
 };
 
+export type Room = keyof typeof AirthingsConfig.devices;
+
 export function getService() {
   return new DatabaseService(AGENTDB_API_URL, AGENTDB_API_KEY);
 }
@@ -20,7 +22,7 @@ export function getAirthingsDb() {
   return getService().connect(agentDbKey, AirthingsConfig.db, 'sqlite');
 }
 
-export async function getHumidity(device: keyof typeof AirthingsConfig.devices) {
+export async function getHumidity(device: Room) {
   const result = await getAirthingsDb().execute([
     {
       sql: `SELECT * FROM sensor_readings 
@@ -30,6 +32,31 @@ export async function getHumidity(device: keyof typeof AirthingsConfig.devices) 
       params: [AirthingsConfig.devices[device]],
     },
   ]);
+  return result.results[0].rows?.[0] ?? null;
+}
 
+export async function getCO2(device: Room) {
+  const result = await getAirthingsDb().execute([
+    {
+      sql: `SELECT * FROM sensor_readings 
+              WHERE device_serial = ? AND sensor_type = 'co2'
+              ORDER BY recorded DESC
+              LIMIT 1`,
+      params: [AirthingsConfig.devices[device]],
+    },
+  ]);
+  return result.results[0].rows?.[0] ?? null;
+}
+
+export async function getRadon(device: Room) {
+  const result = await getAirthingsDb().execute([
+    {
+      sql: `SELECT * FROM sensor_readings 
+              WHERE device_serial = ? AND sensor_type = 'radonShortTermAvg'
+              ORDER BY recorded DESC
+              LIMIT 1`,
+      params: [AirthingsConfig.devices[device]],
+    },
+  ]);
   return result.results[0].rows?.[0] ?? null;
 }

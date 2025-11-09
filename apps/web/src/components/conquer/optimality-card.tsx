@@ -37,7 +37,7 @@ export default function OptimalityCard({
   const statusColor = ranges.find((r) => r.progress !== undefined)?.color;
 
   return (
-    <div className="p-4 flex text-md justify-between items-center bg-muted rounded-lg h-full">
+    <div className="p-4 flex text-md justify-between items-center bg-muted rounded-lg h-20">
       {/* Left: Label & Description */}
       <div className="w-2/5">
         <div className="font-semibold">{label}</div>
@@ -55,7 +55,7 @@ export default function OptimalityCard({
               )}
             />
           )}
-          <div>{value}</div>
+          <div>{value === 'scramble' ? '??' : value}</div>
         </div>
         <div className="opacity-70">{statusLabel}</div>
       </div>
