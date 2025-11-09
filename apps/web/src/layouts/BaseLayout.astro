@@ -1,5 +1,6 @@
 ---
-import "../styles/global.css";
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -8,9 +9,9 @@ interface Props {
 }
 
 const {
-  title = "alex",
+  title = 'alex',
   description = "alex' godfrey's personal website",
-  ogImage = "/og-image.png",
+  ogImage = '/og-image.png',
 } = Astro.props;
 
 // Get the full URL for the OG image
@@ -40,39 +41,9 @@ const ogImageURL = new URL(ogImage, Astro.site || Astro.url.origin);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImageURL} />
-
-    <!-- Font Preloads -->
-    <link
-      rel="preload"
-      href="/fonts/Aspekta-400.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Aspekta-500.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- Font links -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Creepster&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Eater&display=swap"
-    />
+    <ClientRouter fallback="animate" />
   </head>
-  <body
-    class="min-h-screen bg-background text-foreground transition-colors duration-300"
-  >
+  <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
     <div class="relative flex min-h-screen flex-col overflow-x-hidden">
       <slot />
     </div>

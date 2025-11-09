@@ -1,0 +1,45 @@
+---
+import { Logo, Logos } from './utilities/logo';
+---
+
+<div
+  id="profile-card"
+  class="profile-card bg-background/95 backdrop-blur-sm p-12 rounded-xl border-2 border-border shadow-2xl pointer-events-auto"
+>
+  <div
+    class="absolute flex items-center gap-1 top-1 left-1 [&_img:hover]:scale-150 [&_img]:transition-transform"
+  >
+    <Logo name={Logos.SHV} className="w-6 h-4" />
+    <a href="https://conquer.onetwentyone.ai">
+      <Logo name={Logos.OneTwentyOne} className="size-4.5" />
+    </a>
+    <a href="/resources/Letter%20of%20rec%20for%20Alex.pdf">
+      <Logo
+        name={Logos.Altum}
+        className="size-5 text-green-500 hover:scale-150 transition-all cursor-pointer hover:text-green-600"
+      />
+    </a>
+    <Logo name={Logos.Cornell} className="size-4" />
+  </div>
+  <h1 class="font-mono font-semibold text-2xl text-foreground">Alex Godfrey</h1>
+  <p class="font-mono text-sm text-muted-foreground font-semibold">Fullstack // Biotech</p>
+  <div
+    class="absolute bottom-6 right-1 grid-rows-8 space-y-1 [&_img:hover]:scale-150 [&_img]:transition-transform"
+  >
+    <Logo name={Logos.Bun} className="size-4" />
+    <Logo name={Logos.AWS} className="size-4" />
+    <Logo name={Logos.PostgreSQL} className="size-4" />
+  </div>
+  <div
+    class="absolute bottom-1 right-1 grid grid-cols-8 gap-1 grid-column-start [&_img:hover]:scale-150 [&_img]:transition-transform"
+  >
+    <Logo name={Logos.Swift} className="size-4" />
+    <Logo name={Logos.Sentry} className="size-4" />
+    <Logo name={Logos.Astro} className="size-4" />
+    <Logo name={Logos.ReactRouter} className="size-4" />
+    <Logo name={Logos.Next} className="size-4" />
+    <Logo name={Logos.Tailwind} className="size-4" />
+    <Logo name={Logos.React} className="size-4" />
+    <Logo name={Logos.TypeScript} className="size-4" />
+  </div>
+</div>
