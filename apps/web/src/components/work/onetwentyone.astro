@@ -3,8 +3,8 @@ import Icon from '../icon-sprite';
 import { Logo, Logos } from '../utilities/logo';
 ---
 
-<section class="grid grid-cols-1 lg:grid-cols-[40%_1fr] py-10 border-y max-h-screen">
-  <div class="sticky top-48 self-start">
+<section class="flex flex-col md:grid md:grid-cols-[40%_1fr] py-10 border-b max-h-screen">
+  <div class="md:sticky md:top-48 md:self-start">
     <div class="px-8 border-l border-muted-foreground/30 flex flex-col">
       <div class="flex items-center gap-2">
         <h1 class="font-mono font-bold md:text-3xl text-muted-foreground">OneTwentyOne</h1>
@@ -20,33 +20,22 @@ import { Logo, Logos } from '../utilities/logo';
     </div>
     <div class="px-8 mt-4 text-muted-foreground/80 flex flex-col gap-2">
       <p>
-        Sutter Hill Ventures is a quiet powerhouse of Silicon Valley, and employs an internal team
-        of around 10 engineers to (1) explore the frontier of technology and (2) build products with
-        portfolio companies.
+        I started OneTwentyOne in 2023 after I got my first blood test, and noticed an abnormality
+        my PCP didn't (high serum folate, high serum B12, high homocysteine → functional B12
+        deficiency from C677T homozygous mutation).
       </p>
       <p>
-        Many of my experiments have been with <a
-          href="https://www.modelcontextprotocol.org"
-          class="underline">Model Context Protocol</a
-        >, a framework for adding context to language models. Such projects include:
+        We tried our hand at a mobile app first, but our real technical IP was in our data analysis
+        and sync engine. In summer 2024, we partnered with Michael Lustgarten, Ph.D, to build <a
+          href="https://conquer.onetwentyone.ai"
+          class="underline">Conquer</a
+        >, a biomarker analysis tool. Try it now!
       </p>
-      <ul class="list-disc list-inside pl-4">
-        <li>AgentDB</li>
-        <li>ChatDB</li>
-      </ul>
-      <p>
-        Additionally, I've had the privilege of building technical solutions for the following
-        portfolio companies:
-      </p>
-      <ul class="list-disc list-inside pl-4">
-        <li>Ridge Biosciences</li>
-        <li>Integrated Biosciences</li>
-        <li>Run</li>
-        <li>Aria Networks</li>
-      </ul>
     </div>
   </div>
-  <div class="bg-gray-100 h-64">
-    <div>hi</div>
+  <div class="hidden md:block h-auto">
+    <div>
+      <img src="/images/biomark-overview.webp" alt="121 Health" />
+    </div>
   </div>
 </section>

@@ -5,6 +5,8 @@ const iconDefs = {
   arrowUpRight: 'arrow-up-right',
   squareStackUp: 'square-stack-up',
   pinCircle: 'pin-circle',
+  linkedin: 'linkedin',
+  github: 'github',
 };
 
 type IconProps = {
@@ -15,7 +17,7 @@ type IconProps = {
   style?: CSSProperties;
 };
 
-type IconName = keyof typeof iconDefs;
+export type IconName = keyof typeof iconDefs;
 
 export const version = Object.keys(iconDefs).length + 1;
 

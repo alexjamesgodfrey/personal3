@@ -41,7 +41,7 @@ export default function OptimalityCard({
       {/* Left: Label & Description */}
       <div className="w-2/5 text-sm sm:text-base">
         <div className="font-semibold">
-          {label} <span className="sm:hidden">· {value === 'scramble' ? '??' : value}</span>
+          {label} <span className="xl:hidden">· {value === 'scramble' ? '??' : value}</span>
         </div>
         {description && (
           <div className="opacity-70 text-xs sm:text-base">
@@ -51,7 +51,7 @@ export default function OptimalityCard({
       </div>
 
       {/* Middle: Value & Status */}
-      <div className="hidden sm:block w-1/5">
+      <div className="hidden xl:block w-1/5">
         <div className="font-semibold relative">
           {statusColor && (
             <div
@@ -67,7 +67,7 @@ export default function OptimalityCard({
       </div>
 
       {/* Right: Range Visualization */}
-      <div className="flex flex-col space-y-1 w-3/5 sm:w-2/5">
+      <div className="flex flex-col space-y-1 w-3/5 xl:w-2/5">
         {ranges.toReversed().map((spec, i) => (
           <RangeBar
             key={i}
@@ -101,9 +101,9 @@ function RangeBar({ label, color, progress, optimality, trend }: RangeBarProps) 
 
   return (
     <div className="flex justify-end items-center">
-      <div className="text-xs sm:text-sm opacity-70 w-16 mr-3 text-right">{label}</div>
+      <div className="text-xs sm:text-sm opacity-70 w-16 mr-3 text-right line-clamp-1">{label}</div>
 
-      <div className="flex w-20 sm:w-36 mb-1 relative">
+      <div className="flex w-20 md:w-36 mb-1 relative">
         {progress === undefined ? (
           // Range endpoints when no current value
           <div className="flex mt-0.5 w-full justify-between">
@@ -116,16 +116,16 @@ function RangeBar({ label, color, progress, optimality, trend }: RangeBarProps) 
             {/* Current value indicator */}
             <div
               style={{ left: `${remOffsetMobile}rem` }}
-              className="sm:hidden bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
+              className="md:hidden bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
             />
 
             <div
               style={{ left: `${remOffset}rem` }}
-              className="hidden sm:block bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
+              className="hidden md:block bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
             />
 
             {/* Bar background */}
-            <div className="relative w-20 sm:w-36 h-[0.32rem]">
+            <div className="relative w-20 md:w-36 h-[0.32rem]">
               <div className={cn(color, 'absolute inset-0 rounded-sm')} />
 
               {/* Gradient overlay based on optimality */}

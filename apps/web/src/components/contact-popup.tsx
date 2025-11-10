@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@alexgodfrey/ui/components/ui/button';
 import {
   Dialog,
@@ -10,48 +8,47 @@ import {
 } from '@alexgodfrey/ui/components/ui/dialog';
 import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
 import * as React from 'react';
-import Icon from './icon-sprite';
+import Icon, { type IconName } from './icon-sprite';
 
 interface ContactMethod {
   label: string;
   value: string;
-  href?: string;
-  copyable?: boolean;
-  icon?: 'squareStackUp' | 'arrowUpRight';
+  href: string;
+  icon?: IconName;
 }
 
 const contactMethods: ContactMethod[] = [
   {
     label: 'Email',
-    value: 'alex@example.com', // Replace with actual email
-    href: 'mailto:alex@example.com',
-    copyable: true,
+    value: 'me@alexgodfrey.com',
+    href: 'mailto:me@alexgodfrey.com',
     icon: 'squareStackUp',
   },
   {
     label: 'LinkedIn',
-    value: 'linkedin.com/in/alexgodfrey', // Replace with actual LinkedIn
-    href: 'https://linkedin.com/in/alexgodfrey',
-    copyable: true,
-    icon: 'squareStackUp',
+    value: 'linkedin.com/in/alexgodfrey',
+    href: 'https://linkedin.com/in/alexgodfreyapi',
+    icon: 'linkedin',
   },
   {
     label: 'GitHub',
-    value: 'github.com/alexgodfrey', // Replace with actual GitHub
-    href: 'https://github.com/alexgodfrey',
-    copyable: true,
-    icon: 'squareStackUp',
+    value: 'github.com/alexjamesgodfrey',
+    href: 'https://github.com/alexjamesgodfrey',
+    icon: 'github',
   },
 ];
 
 export function ContactPopup() {
   const [open, setOpen] = React.useState(false);
-  const [copied, setCopied] = React.useState<string | null>(null);
 
   // Handle keyboard shortcut (C key)
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'c' || e.key === 'C') {
+        // Don't trigger if modifier keys are pressed
+        if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) {
+          return;
+        }
         // Don't trigger if user is typing in an input
         if (
           e.target instanceof HTMLInputElement ||
@@ -80,16 +77,6 @@ export function ContactPopup() {
     };
   }, []);
 
-  const handleCopy = async (value: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(label);
-      setTimeout(() => setCopied(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
@@ -101,9 +88,12 @@ export function ContactPopup() {
         </DialogHeader>
         <div className="mt-6 space-y-3">
           {contactMethods.map((method, index) => (
-            <div
+            <a
               key={index}
-              className="group flex items-center gap-3 p-3 rounded-md hover:bg-muted/30 transition-colors border border-transparent hover:border-muted-foreground/20"
+              href={method.href}
+              target={method.href.startsWith('http') ? '_blank' : undefined}
+              rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="group flex items-center gap-3 p-3 rounded-md hover:bg-muted/30 transition-colors border border-transparent hover:border-muted-foreground/20 block"
             >
               {method.icon && (
                 <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-md bg-muted/50 group-hover:bg-muted transition-colors">
@@ -115,48 +105,17 @@ export function ContactPopup() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground/60 uppercase tracking-wide">
-                    {method.label}
-                  </span>
-                  {method.copyable && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCopy(method.value, method.label);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity font-mono text-[10px] text-muted-foreground/50 hover:text-foreground"
-                    >
-                      {copied === method.label ? '✓' : '↗'}
-                    </button>
-                  )}
-                </div>
-                {method.href ? (
-                  <a
-                    href={method.href}
-                    target={method.href.startsWith('http') ? '_blank' : undefined}
-                    rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="block text-sm text-foreground hover:text-muted-foreground/80 transition-colors truncate mt-0.5"
-                    onClick={(e) => {
-                      if (method.copyable) {
-                        e.preventDefault();
-                        handleCopy(method.value, method.label);
-                      }
-                    }}
-                  >
-                    {method.value}
-                  </a>
-                ) : (
-                  <p className="text-sm text-foreground truncate mt-0.5">{method.value}</p>
-                )}
+                <span className="font-mono text-xs text-muted-foreground/60 uppercase tracking-wide block">
+                  {method.label}
+                </span>
+                <p className="text-sm text-foreground truncate mt-0.5">{method.value}</p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
         <div className="mt-6 pt-4 border-t border-muted-foreground/20 flex items-center justify-between">
           <p className="text-xs text-muted-foreground/50 font-mono">
-            <Kbd className="text-[10px]">C</Kbd> toggle · <Kbd className="text-[10px]">ESC</Kbd>{' '}
-            close
+            <Kbd className="text-[10px]">ESC</Kbd>
           </p>
           <Button
             variant="ghost"

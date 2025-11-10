@@ -1,4 +1,3 @@
-'use client';
 import { Label } from '@alexgodfrey/ui/components/ui/label';
 import { cn } from '@alexgodfrey/ui/lib/utils';
 import * as LabelPrimitive from '@radix-ui/react-label';
