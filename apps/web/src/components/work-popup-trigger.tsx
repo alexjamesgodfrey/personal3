@@ -12,9 +12,17 @@ export function WorkPopupTrigger() {
 
   const scrollToSHV = useCallback(() => {
     const shvElement = document.getElementById('shv-section');
-    if (shvElement) {
-      shvElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!shvElement) {
+      return;
     }
+
+    const rect = shvElement.getBoundingClientRect();
+    const elementTop = window.scrollY + rect.top;
+    const viewportHeight = window.innerHeight;
+    const offset = Math.max((viewportHeight - rect.height) / 2, 0);
+    const target = Math.max(elementTop - offset, 0);
+
+    window.scrollTo({ top: target, behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
