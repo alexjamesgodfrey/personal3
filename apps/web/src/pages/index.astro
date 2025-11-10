@@ -230,7 +230,7 @@ export const prerender = true;
     <!-- <MasonryGrid cells={cells} className="p-2" columns={4} gap={8} /> -->
     <!-- <ProfileCard /> -->
   </div>
-  <div class="fixed bottom-4 left-[calc(50%-6rem)]">
+  <div class="fixed bottom-4 left-[calc(50%-6rem)] z-[99999999]">
     <HumanOrMachine defaultValue="human" machineLink="/blog/ai" humanLink="/" client:load />
   </div>
   <ContactPopup client:load />
