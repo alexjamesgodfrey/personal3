@@ -9,7 +9,11 @@ export function ContactPopupTrigger() {
   };
 
   return (
-    <Button variant="outline" className="uppercase font-mono shadow-none" onClick={handleClick}>
+    <Button
+      variant="outline"
+      className="uppercase font-mono shadow-none !bg-background"
+      onClick={handleClick}
+    >
       Contact<Kbd className="ml-1 hidden sm:inline">C</Kbd>
     </Button>
   );

@@ -112,7 +112,11 @@ export function WorkPopupTrigger() {
   }, [isScrolled, downloadResume]);
 
   return (
-    <Button variant="outline" className="uppercase font-mono shadow-none" onClick={handleClick}>
+    <Button
+      variant="outline"
+      className="uppercase font-mono shadow-none !bg-background"
+      onClick={handleClick}
+    >
       {isScrolled ? (
         <>
           Resume<Kbd className="ml-1 hidden sm:inline">R</Kbd>
