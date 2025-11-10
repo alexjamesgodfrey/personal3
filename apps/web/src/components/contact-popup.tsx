@@ -79,7 +79,7 @@ export function ContactPopup() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto z-[999999]">
+      <DialogContent className="max-w-4/5 sm:max-w-md max-h-[80vh] overflow-y-auto z-[999999]">
         <DialogHeader>
           <DialogTitle className="font-mono text-xl">Contact</DialogTitle>
           <DialogDescription className="font-mono text-xs text-muted-foreground/60">
@@ -115,7 +115,7 @@ export function ContactPopup() {
         </div>
         <div className="mt-6 pt-4 border-t border-muted-foreground/20 flex items-center justify-between">
           <p className="text-xs text-muted-foreground/50 font-mono">
-            <Kbd className="text-[10px]">ESC</Kbd>
+            <Kbd className="text-[10px] hidden sm:block">ESC</Kbd>
           </p>
           <Button
             variant="ghost"

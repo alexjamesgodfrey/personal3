@@ -1,4 +1,5 @@
 ---
+import { HumanOrMachine } from '@alexgodfrey/web/components/human-or-machine';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
 import { validateNote } from '@alexgodfrey/web/lib/validators';
 import { getCollection, render } from 'astro:content';
@@ -24,6 +25,8 @@ const { note } = Astro.props;
 const frontmatter = validateNote(note.data);
 const { Content } = await render(note);
 const rawMarkdown = note.body;
+
+console.log(frontmatter);
 ---
 
 <Layout title={frontmatter.title} description={frontmatter.description}>
@@ -31,7 +34,7 @@ const rawMarkdown = note.body;
     <header class="mb-8 relative pt-10 sm:pt-0">
       <button
         id="copy-markdown-btn"
-        class="absolute -top-2 right-0 sm:top-0 px-3 py-1.5 text-xs font-mono text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-muted/50 transition-colors"
+        class="absolute -top-2 right-4 sm:top-0 px-3 py-1.5 text-xs font-mono text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-muted/50 transition-colors"
       >
         Copy Markdown
       </button>
@@ -75,16 +78,38 @@ const rawMarkdown = note.body;
     <div class="prose prose-invert max-w-none [&_p]:mb-4">
       <Content />
     </div>
+    {
+      frontmatter.humanLink && typeof frontmatter.humanLink === 'string' && (
+        <div class="fixed bottom-4 left-[calc(50%-6rem)]">
+          <HumanOrMachine
+            defaultValue="machine"
+            machineLink={`/blog/${note.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '')}`}
+            humanLink={'/'}
+            client:load
+          />
+        </div>
+      )
+    }
   </article>
 </Layout>
 
 <script>
-  const copyBtn = document.getElementById('copy-markdown-btn');
-  const markdownScript = document.getElementById('markdown-content');
-  if (copyBtn && markdownScript) {
-    copyBtn.addEventListener('click', async () => {
+  const attachCopyHandler = () => {
+    const copyBtn = document.getElementById('copy-markdown-btn');
+    const markdownScript = document.getElementById('markdown-content');
+
+    if (!copyBtn || !markdownScript) {
+      return;
+    }
+
+    if (copyBtn.dataset.copyHandlerAttached === 'true') {
+      return;
+    }
+
+    const handleClick = async (event) => {
+      event.preventDefault();
       try {
-        const markdown = JSON.parse(markdownScript.textContent);
+        const markdown = JSON.parse(markdownScript.textContent || '""');
         await navigator.clipboard.writeText(markdown);
         const originalText = copyBtn.textContent;
         copyBtn.textContent = 'Copied!';
@@ -100,6 +125,13 @@ const rawMarkdown = note.body;
           copyBtn.textContent = 'Copy Markdown';
         }, 2000);
       }
-    });
-  }
+    };
+
+    copyBtn.addEventListener('click', handleClick);
+    copyBtn.dataset.copyHandlerAttached = 'true';
+  };
+
+  document.addEventListener('astro:page-load', attachCopyHandler);
+  document.addEventListener('astro:after-swap', attachCopyHandler);
+  attachCopyHandler();
 </script>

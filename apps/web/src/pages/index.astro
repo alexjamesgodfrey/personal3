@@ -25,7 +25,7 @@ export const prerender = true;
 
 <Layout>
   <div class="relative w-full bg-background flex flex-col">
-    <div class="mt-2 sm:mt-4 lg:mt-24 mx-6 sm:mx-12 lg:mx-24 flex flex-col space-y-8">
+    <div class="mt-8 sm:mt-12 lg:mt-24 mx-3 sm:mx-12 lg:mx-24 flex flex-col space-y-8">
       <!-- Header that transitions on scroll - STICKY -->
       <div
         id="header-container"
@@ -96,7 +96,7 @@ export const prerender = true;
             </div>
             <p
               id="skills-label"
-              class="uppercase absolute -right-9.5 top-1/2 mb-4 -translate-y-1/2 rotate-90 font-mono text-muted-foreground/80 text-sm"
+              class="hidden uppercase sm:absolute -right-9.5 top-1/2 mb-4 -translate-y-1/2 rotate-90 font-mono text-muted-foreground/80 text-sm"
               style="transition: opacity 0.3s ease;"
             >
               Skills
@@ -175,9 +175,9 @@ export const prerender = true;
         </div>
       </div>
     </div>
-    <div>
+    <div class="pb-16 lg:pb-0 dither-lg md:dither-2xl">
       <h1
-        class="font-mono font-bold text-[5rem] md:text-[16rem] text-muted-foreground uppercase dither-lg md:dither-2xl text-center"
+        class="font-mono font-bold text-[5rem] md:text-[16rem] text-muted-foreground uppercase text-center"
       >
         Godfrey
       </h1>
@@ -195,17 +195,31 @@ export const prerender = true;
     let rafId: number;
     type RgbaColor = { r: number; g: number; b: number; a: number };
 
-    const headerContainer = document.getElementById('header-container');
-    const fullstackLabel = document.getElementById('fullstack-label');
-    const descriptionText = document.getElementById('description-text');
-    const actionButtons = document.getElementById('action-buttons');
-    const actionButtonsRight = document.getElementById('action-buttons-right');
-    const skillsSidebar = document.getElementById('skills-sidebar');
-    const skillsLabel = document.getElementById('skills-label');
+    let headerContainer: HTMLElement | null = null;
+    let fullstackLabel: HTMLElement | null = null;
+    let descriptionText: HTMLElement | null = null;
+    let actionButtons: HTMLElement | null = null;
+    let actionButtonsRight: HTMLElement | null = null;
+    let skillsSidebar: HTMLElement | null = null;
+    let skillsLabel: HTMLElement | null = null;
 
     const viewport = window.innerWidth;
     let initialBorderColor: string | null = null;
     let borderColorChannels: RgbaColor | null = null;
+
+    const assignElements = () => {
+      headerContainer = document.getElementById('header-container');
+      fullstackLabel = document.getElementById('fullstack-label');
+      descriptionText = document.getElementById('description-text');
+      actionButtons = document.getElementById('action-buttons');
+      actionButtonsRight = document.getElementById('action-buttons-right');
+      skillsSidebar = document.getElementById('skills-sidebar');
+      skillsLabel = document.getElementById('skills-label');
+      initialBorderColor = null;
+      borderColorChannels = null;
+    };
+
+    assignElements();
 
     const ensureBorderColor = () => {
       if (borderColorChannels || !fullstackLabel) {
@@ -258,7 +272,18 @@ export const prerender = true;
         !skillsSidebar ||
         !skillsLabel
       ) {
-        return;
+        assignElements();
+        if (
+          !headerContainer ||
+          !fullstackLabel ||
+          !descriptionText ||
+          !actionButtons ||
+          !actionButtonsRight ||
+          !skillsSidebar ||
+          !skillsLabel
+        ) {
+          return;
+        }
       }
 
       ensureBorderColor();
@@ -275,6 +300,8 @@ export const prerender = true;
 
         fullstackLabel.style.transform = `translateY(${progress * 102}px)`;
         fullstackLabel.style.marginBottom = `${8 * (1 - progress)}px`;
+        fullstackLabel.style.marginTop = `${-42 * progress}px`;
+
         setBorderOpacity(1 - progress * 2);
 
         actionButtons.style.opacity = `${1 - progress}`;
@@ -289,6 +316,7 @@ export const prerender = true;
         skillsSidebar.style.opacity = '1';
         skillsLabel.style.opacity = '1';
         fullstackLabel.style.transform = 'translateY(0)';
+        fullstackLabel.style.marginTop = '0';
 
         fullstackLabel.style.paddingLeft = viewport < 640 ? '16px' : '32px';
         fullstackLabel.style.marginBottom = '8px';
@@ -314,9 +342,13 @@ export const prerender = true;
     document.addEventListener('scroll', onScroll, { passive: true });
 
     // Handle Astro view transitions
-    document.addEventListener('astro:page-load', () => {
+    const reinitializeHeader = () => {
+      assignElements();
       updateHeader();
-    });
+    };
+
+    document.addEventListener('astro:after-swap', reinitializeHeader);
+    document.addEventListener('astro:page-load', reinitializeHeader);
 
     // Initial call
     updateHeader();
