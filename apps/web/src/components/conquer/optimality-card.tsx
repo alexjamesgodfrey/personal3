@@ -116,12 +116,12 @@ function RangeBar({ label, color, progress, optimality, trend }: RangeBarProps) 
             {/* Current value indicator */}
             <div
               style={{ left: `${remOffsetMobile}rem` }}
-              className="md:hidden bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
+              className="md:hidden bg-background absolute z-5 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
             />
 
             <div
               style={{ left: `${remOffset}rem` }}
-              className="hidden md:block bg-background absolute z-50 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
+              className="hidden md:block bg-background absolute z-5 h-2.5 w-2.5 top-[-.125rem] border-foreground border-[2.5px] rounded-full"
             />
 
             {/* Bar background */}
