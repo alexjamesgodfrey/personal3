@@ -79,7 +79,7 @@ export function ContactPopup() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto z-[999999]">
         <DialogHeader>
           <DialogTitle className="font-mono text-xl">Contact</DialogTitle>
           <DialogDescription className="font-mono text-xs text-muted-foreground/60">
