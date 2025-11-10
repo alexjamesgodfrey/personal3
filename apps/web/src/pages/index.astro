@@ -117,10 +117,22 @@ export const prerender = true;
         <div class="grid grid-cols-1 lg:grid-cols-3 border">
           <div class="flex flex-col col-span-2 lg:border-r border-b lg:border-b-0">
             <div class="border-b">
-              <HumidityCard />
+              <a
+                href="#onetwentyone-section"
+                class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                aria-label="Jump to OneTwentyOne section"
+              >
+                <HumidityCard />
+              </a>
             </div>
             <!-- <Co2Card /> -->
-            <RadonCard />
+            <a
+              href="#onetwentyone-section"
+              class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              aria-label="Jump to OneTwentyOne section"
+            >
+              <RadonCard />
+            </a>
           </div>
           <div class="h-40 flex w-full">
             <div class="w-full"><BlogPreviewCard slug="red-bull" /></div>
@@ -129,16 +141,36 @@ export const prerender = true;
         </div>
         <div class="grid grid-col-1 lg:grid-cols-5 border-b border-r border-l">
           <div class="lg:border-r col-span-2 grid grid-rows-2">
-            <BenjiQuote />
-            <div class="border-b lg:border-b-0 flex flex-col items-center justify-center">
+            <a
+              href="/resources/Letter%20of%20rec%20for%20Alex.pdf"
+              target="_blank"
+              rel="noreferrer"
+              class="block border-b lg:border-b-0 h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              aria-label="Read letter of recommendation"
+            >
+              <BenjiQuote />
+            </a>
+            <a
+              href="https://thiscellpaintingdoesnotexist.com"
+              target="_blank"
+              rel="noreferrer"
+              class="border-b lg:border-b-0 flex flex-col items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              aria-label="Visit This Cell Painting Does Not Exist"
+            >
               <CellPaintVideo />
-            </div>
+            </a>
           </div>
           <div class="col-span-2">
             <div class="">
-              <img src="/images/conquer-biomark.png" alt="Conquer Biomark" />
+              <a
+                href="#onetwentyone-section"
+                class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                aria-label="Jump to OneTwentyOne section"
+              >
+                <img src="/images/conquer-biomark.png" alt="Conquer Biomark" />
+              </a>
             </div>
-            <div class="h-64 border-t flex flex-col items-center justify-center overflow-y-hidden">
+            <div class="h-64 border-t relative flex flex-col items-center justify-center overflow-y-hidden">
               <iframe
                 src={constructChatdbUrl({
                   appId: 'a2c51623-badd-4ef2-a830-e7c39a1df343',
@@ -153,14 +185,27 @@ export const prerender = true;
                 loading="lazy"
                 style="border:0;width:100%;height:100%;display:block;overflow-y:hidden;"
                 allow="clipboard-read; clipboard-write"></iframe>
+              <a
+                href="https://chatdb.io"
+                target="_blank"
+                rel="noreferrer"
+                class="absolute inset-0 z-10"
+                aria-label="Open ChatDB"
+              ></a>
             </div>
           </div>
           <div class="hidden lg:block border-l">
-            <img
-              src="/images/121health.webp"
-              alt="Conquer Biomark"
-              class="object-cover h-full w-full"
-            />
+            <a
+              href="#onetwentyone-section"
+              class="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              aria-label="Jump to OneTwentyOne section"
+            >
+              <img
+                src="/images/121health.webp"
+                alt="121 Health interface"
+                class="object-cover h-full w-full"
+              />
+            </a>
           </div>
         </div>
       </div>

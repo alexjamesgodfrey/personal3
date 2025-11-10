@@ -53,23 +53,12 @@ console.log(frontmatter);
       }
       <div class="font-mono text-xs text-muted-foreground">
         <time datetime={frontmatter.pubDate.toISOString()}>
-          Published: {
-            frontmatter.pubDate.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })
-          }
+          Published: {frontmatter.pubDate.toISOString().split('T')[0]}
         </time>
         {
           frontmatter.updatedDate && (
             <time datetime={frontmatter.updatedDate.toISOString()} class="ml-4">
-              Updated:{' '}
-              {frontmatter.updatedDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              Updated: {frontmatter.updatedDate.toISOString().split('T')[0]}
             </time>
           )
         }
