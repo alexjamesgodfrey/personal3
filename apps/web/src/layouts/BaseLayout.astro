@@ -14,41 +14,9 @@ const {
   ogImage = '/og-image.png',
 } = Astro.props;
 
+// Get the full URL for the OG image
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(ogImage, Astro.site || Astro.url.origin);
-
-const horizontalCollapseTransition = {
-  forwards: {
-    old: {
-      name: 'collapse-horizontal',
-      duration: '0.15s',
-      easing: 'ease-in',
-      fillMode: 'forwards',
-    },
-    new: {
-      name: 'expand-horizontal',
-      duration: '0.15s',
-      easing: 'ease-out',
-      delay: '0.15s', // This should match the old animation's duration
-      fillMode: 'backwards',
-    },
-  },
-  backwards: {
-    old: {
-      name: 'collapse-horizontal',
-      duration: '0.15s',
-      easing: 'ease-in',
-      fillMode: 'forwards',
-    },
-    new: {
-      name: 'expand-horizontal',
-      duration: '0.15s',
-      easing: 'ease-out',
-      delay: '0.15s', // This should match the old animation's duration
-      fillMode: 'backwards',
-    },
-  },
-};
 ---
 
 <!doctype html>
@@ -59,11 +27,15 @@ const horizontalCollapseTransition = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageURL} />
+
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
@@ -72,35 +44,8 @@ const horizontalCollapseTransition = {
     <ClientRouter fallback="animate" />
   </head>
   <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
-    <div
-      class="relative flex min-h-screen flex-col"
-      transition:name="main-content"
-      transition:animate={horizontalCollapseTransition}
-    >
+    <div class="relative flex min-h-screen flex-col">
       <slot />
     </div>
   </body>
 </html>
-
-<style is:global>
-  @keyframes collapse-horizontal {
-    0% {
-      transform: scaleX(1);
-      opacity: 1;
-    }
-    100% {
-      transform: scaleX(0.3);
-      opacity: 0; /* Change this to 0 */
-    }
-  }
-  @keyframes expand-horizontal {
-    0% {
-      transform: scaleX(0.3);
-      opacity: 0; /* Change this to 0 */
-    }
-    100% {
-      transform: scaleX(1);
-      opacity: 1;
-    }
-  }
-</style>
