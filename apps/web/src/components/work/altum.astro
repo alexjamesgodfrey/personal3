@@ -1,0 +1,48 @@
+---
+import Icon from '../icon-sprite';
+import { Logo, Logos } from '../utilities/logo';
+---
+
+<section class="grid lg:grid-cols-[40%_1fr] py-10 border-y max-h-screen">
+  <div class="sticky top-48 self-start">
+    <div class="px-8 border-l border-muted-foreground/30 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h1 class="font-mono font-bold md:text-3xl text-muted-foreground">Altum Labs</h1>
+        <Logo name={Logos.Altum} className="size-4.5" />
+      </div>
+      <div
+        class="flex items-center gap-2 text-sm text-muted-foreground/80 uppercase font-mono mt-1"
+      >
+        <Icon name="pinCircle" className="size-3.5" />
+        <p class="font-medium text-muted-foreground/80">NYC, 2023</p>
+      </div>
+      <p class="font-medium text-muted-foreground/80 mt-2">
+        API Architect → Technical Lead → CTO Offer
+      </p>
+    </div>
+    <div class="px-8 mt-4 text-muted-foreground/80 flex flex-col gap-2">
+      <p>
+        Contracted by Altum Labs CEO to architect and implement multi-tenant database and
+        corresponding api from scratch, enabling team of 12 engineers to efficiently develop with
+        secure data.
+      </p>
+
+      <p>
+        In late July-August, lead team of 9 web devs to develop plantalysis, an online lab testing
+        marketplace. Primarily worked to organize the other engineers, acting as intermediary
+        between CEO and all developers.
+      </p>
+
+      <p>In early August, offered a full-time position as CTO.</p>
+
+      <p>
+        <a href="/resources/Letter%20of%20rec%20for%20Alex.pdf" class="underline text-accent"
+          >Read the letter of recommendation from the CEO here
+        </a>.
+      </p>
+    </div>
+  </div>
+  <div class="bg-gray-100 h-64">
+    <div>hi</div>
+  </div>
+</section>

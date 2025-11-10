@@ -1,0 +1,53 @@
+---
+import { validateNote } from '@alexgodfrey/web/lib/validators';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  slug: string;
+}
+
+export const prerender = true;
+
+const { slug } = Astro.props;
+
+// Get all notes and find the one matching the slug
+const allNotes = await getCollection('notes');
+const note = allNotes.find((n) => {
+  const noteSlug = n.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+  return noteSlug === slug;
+});
+
+if (!note) {
+  throw new Error(`Blog post with slug "${slug}" not found`);
+}
+
+const frontmatter = validateNote(note.data);
+const blogUrl = `/blog/${slug}`;
+---
+
+<a
+  href={blogUrl}
+  class="block h-full transition-colors p-2 px-4 sm:py-2 sm:px-6 rounded-lg bg-background hover:bg-muted/5"
+>
+  <div class="flex flex-col justify-around h-full">
+    <h3 class="font-mono font-semibold text-lg text-foreground line-clamp-2">
+      {frontmatter.title}
+    </h3>
+    {
+      frontmatter.description && (
+        <p class="text-sm text-muted-foreground/80 line-clamp-2">{frontmatter.description}</p>
+      )
+    }
+    <div class="font-mono text-xs text-muted-foreground/60">
+      <time datetime={frontmatter.pubDate.toISOString()}>
+        {
+          frontmatter.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        }
+      </time>
+    </div>
+  </div>
+</a>

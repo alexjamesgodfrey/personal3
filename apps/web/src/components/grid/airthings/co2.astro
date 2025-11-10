@@ -1,0 +1,25 @@
+---
+import OptimalityCard from '@alexgodfrey/web/components/conquer/optimality-card.tsx';
+import AirthingsStat from '@alexgodfrey/web/components/grid/airthings/airthings-stat.astro';
+---
+
+<AirthingsStat
+  queryType="co2"
+  serial="bedroomSerial"
+  label="CO₂"
+  location="Living Room"
+  server:defer
+>
+  <OptimalityCard
+    slot="fallback"
+    label="CO₂"
+    description="Living Room"
+    statusLabel="Loading"
+    optimality="optimal"
+    value="scramble"
+    ranges={[
+      { label: 'Too High', color: 'bg-red-500', min: 600, max: 5000 },
+      { label: 'Optimal', color: 'bg-green-500', min: 0, max: 600, progress: 0.5 },
+    ]}
+  />
+</AirthingsStat>

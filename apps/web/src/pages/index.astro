@@ -1,195 +1,274 @@
 ---
-import { Button } from '@alexgodfrey/ui/components/ui/button';
-import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
+import Altum from '../components/work/altum.astro';
+import OneTwentyOne from '../components/work/onetwentyone.astro';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
-import OptimalityCard from '../components/conquer/optimality-card';
-import BedroomHumidity from '../components/grid/bedroom-humidity.astro';
+import BlogPreviewCard from '../components/blog-preview-card.astro';
+import SHV from '../components/work/shv.astro';
+import { ContactPopup } from '../components/contact-popup';
+import { ContactPopupTrigger } from '../components/contact-popup-trigger';
+import Co2Card from '../components/grid/airthings/co2.astro';
+import HumidityCard from '../components/grid/airthings/humidity.astro';
+import RadonCard from '../components/grid/airthings/radon.astro';
+import BenjiQuote from '../components/grid/benji-quote.astro';
+import CellPaintVideo from '../components/grid/cellpaint-video.astro';
 import { HumanOrMachine } from '../components/human-or-machine';
-import ProfileCard from '../components/profile-card.astro';
+import Icon from '../components/icon-sprite';
 import { Logo, Logos } from '../components/utilities/logo';
-import type { Cell } from '../types';
+import { WorkPopup } from '../components/work-popup';
+import { WorkPopupTrigger } from '../components/work-popup-trigger';
+import Section from '../components/work/section.astro';
+import { constructChatdbUrl } from '../lib/construct-chatdb-url';
 
 export const prerender = true;
-const cells: Cell[] = [
-  { width: 1, height: 200, id: 'cellpaint' },
-  { width: 2, height: 200, id: '' },
-  { width: 1, height: 120, id: 'blog-post' },
-  { width: 1, height: 180, id: '' },
-  { width: 2, height: 120, id: 'bedroom-humidity' },
-  { width: 2, height: 160, id: '' },
-  { width: 2, height: 300, id: 'chatdb-test' },
-  { width: 1, height: 190, id: '' },
-  { width: 2, height: 500, id: 'conquer-biomark' },
-  { width: 1, height: 260, id: '' },
-  { width: 1, height: 180, id: '' },
-  { width: 3, height: 120, id: '' },
-  { width: 1, height: 160, id: '' },
-];
 ---
 
 <Layout>
-  <div class="relative w-full min-h-[300vh] bg-background flex flex-col">
-    <div class="lg:mt-24 mx-24 flex flex-col space-y-8">
+  <div class="relative w-full bg-background flex flex-col">
+    <div class="mt-2 sm:mt-4 lg:mt-24 mx-6 sm:mx-12 lg:mx-24 flex flex-col space-y-8">
+      <!-- Header that transitions on scroll - STICKY -->
       <div
-        class="font-mono border-l border-muted-foreground/30 text-muted-foreground/80 text-sm flex px-8 items-center gap-2"
+        id="header-container"
+        class="sticky top-0 bg-background z-[999999] flex flex-col pb-4"
+        style="transition: all 0.3s ease;"
       >
-        <!-- <csIcon name="arrowUpRight" /> -->
-        <p>Fullstack Developer</p>
-      </div>
-      <div
-        class="px-8 border-muted-foreground/30 border-l border-r flex flex-col space-y-2 py-1 lg:relative"
-      >
-        <h1 class="font-mono font-bold md:text-3xl text-muted-foreground">Alex Godfrey</h1>
-        <p class="font-medium text-muted-foreground/80">
-          Formally trained in mathematics, computer science, and neuroscience.
-        </p>
-        <p class="font-medium text-muted-foreground/80">
-          Focused on engineering solutions for longevity.
-        </p>
-        <div class="flex mt-1 gap-4 items-center">
-          <Button variant="outline" className="uppercase font-mono shadow-none"
-            >View Work<Kbd className="ml-1">W</Kbd>
-          </Button>
-          <Button variant="outline" className="uppercase font-mono shadow-none"
-            >Contact<Kbd className="ml-1">C</Kbd>
-          </Button>
-        </div>
-        <div class="absolute right-2 h-full flex-col-reverse flex items-center justify-around">
-          <Logo name={Logos.Swift} className="size-4" />
-          <Logo name={Logos.Astro} className="size-4" />
-          <Logo name={Logos.ReactRouter} className="size-4" />
-          <Logo name={Logos.Next} className="size-4" />
-          <Logo name={Logos.Tailwind} className="size-4" />
-          <Logo name={Logos.React} className="size-4" />
-          <Logo name={Logos.TypeScript} className="size-4" />
-        </div>
-        <p
-          class="uppercase absolute -right-9 top-17 rotate-90 font-mono text-muted-foreground/80 text-sm"
+        <div
+          id="fullstack-label"
+          class="font-mono border-l border-muted-foreground/30 text-muted-foreground/80 text-sm flex px-4 sm:px-8 items-center gap-2 mb-2"
+          style="transition: all 0.3s ease;"
         >
-          Skills
-        </p>
-      </div>
-      <div class="px-8 mt-12 border-l border-r border-muted-foreground/30 grid-rows-3">
-        <div class="grid grid-cols-2">
-          <div class="h-60 flex flex-col border">
-            <BedroomHumidity
-              queryType="humidity"
-              serial="bedroomSerial"
-              label="Humidity"
-              location="Bedroom"
-              server:defer
-            >
-              <OptimalityCard
-                slot="fallback"
-                label="Humidity"
-                description="Bedroom"
-                statusLabel="Loading"
-                optimality="optimal"
-                value="scramble"
-                ranges={[
-                  { label: 'Too Dry', color: 'bg-red-500', min: 0, max: 40 },
-                  { label: 'Optimal', color: 'bg-green-500', min: 40, max: 60, progress: 0.5 },
-                  { label: 'Mold Risk', color: 'bg-red-500', min: 60, max: 100 },
-                ]}
-              />
-            </BedroomHumidity>
-
-            <BedroomHumidity
-              queryType="co2"
-              serial="bedroomSerial"
-              label="CO₂"
-              location="Living Room"
-              server:defer
-            >
-              <OptimalityCard
-                slot="fallback"
-                label="CO₂"
-                description="Living Room"
-                statusLabel="Loading"
-                optimality="optimal"
-                value="scramble"
-                ranges={[
-                  { label: 'Too High', color: 'bg-red-500', min: 600, max: 5000 },
-                  { label: 'Optimal', color: 'bg-green-500', min: 0, max: 600, progress: 0.5 },
-                ]}
-              />
-            </BedroomHumidity>
-
-            <BedroomHumidity
-              queryType="radon"
-              serial="studioSerial"
-              label="Radon"
-              location="Studio"
-              server:defer
-            >
-              <OptimalityCard
-                slot="fallback"
-                label="Radon"
-                description="Studio"
-                statusLabel="Loading"
-                optimality="optimal"
-                value="scramble"
-                ranges={[
-                  { label: 'Safe', color: 'bg-green-500', min: 0, max: 100, progress: 0.5 },
-                  { label: 'Elevated', color: 'bg-yellow-500', min: 100, max: 300 },
-                  { label: 'High Risk', color: 'bg-red-500', min: 300, max: 1000 },
-                ]}
-              />
-            </BedroomHumidity>
-          </div>
-          <div class="h-60 border">Two blog posts here</div>
+          <Icon name="squareStackUp" className="size-4 text-muted-foreground/80" />
+          <p>Fullstack Developer</p>
         </div>
-        <div class="grid grid-cols-5">
-          <div class="border col-span-2 grid grid-rows-2">
-            <div class="border-r">Altum labs here</div>
-            <!-- video that autoplays and loops -->
-            <div class="border pt-2">
-              <video
-                src="/videos/cellpaint.mp4"
-                autoplay
-                loop
-                muted
-                playsinline
-                class="w-full h-full object-cover"></video>
+
+        <div
+          id="header-content"
+          class="flex relative items-start gap-4 justify-between mt-8 px-4 sm:px-8 border-l border-r border-muted-foreground/30"
+        >
+          <div class="flex flex-col">
+            <h1 class="font-mono font-bold md:text-3xl text-muted-foreground">Alex Godfrey</h1>
+
+            <!-- Description paragraphs - fade out on scroll -->
+            <div
+              id="description-text"
+              class="overflow-hidden flex flex-col gap-1 my-2"
+              style="transition: all 0.3s ease;"
+            >
+              <p class="font-medium text-muted-foreground/80 text-sm sm:text-base">
+                Formally trained in mathematics, computer science, and neuroscience.
+              </p>
+              <p class="font-medium text-muted-foreground/80 text-sm sm:text-base">
+                Focused on engineering solutions for longevity.
+              </p>
+            </div>
+
+            <!-- Buttons - initially below description -->
+            <div
+              id="action-buttons"
+              class="flex mt-1 gap-4 items-center"
+              style="transition: all 0.3s ease;"
+            >
+              <WorkPopupTrigger client:load />
+              <ContactPopupTrigger client:load />
+            </div>
+
+            <!-- Skills sidebar - fade out on scroll -->
+            <div
+              id="skills-sidebar"
+              class="absolute right-2 top-0 bottom-0 flex flex-col-reverse items-center justify-around"
+              style="transition: opacity 0.3s ease;"
+            >
+              <Logo name={Logos.PostgreSQL} className="size-4" />
+              <Logo name={Logos.AWS} className="size-4" />
+              <Logo name={Logos.Astro} className="size-4" />
+              <Logo name={Logos.Next} className="size-4" />
+              <Logo name={Logos.Tailwind} className="size-4" />
+              <Logo name={Logos.React} className="size-4" />
+              <Logo name={Logos.TypeScript} className="size-4" />
+            </div>
+            <p
+              id="skills-label"
+              class="uppercase absolute -right-9.5 top-1/2 mb-4 -translate-y-1/2 rotate-90 font-mono text-muted-foreground/80 text-sm"
+              style="transition: opacity 0.3s ease;"
+            >
+              Skills
+            </p>
+          </div>
+
+          <!-- Buttons container for scrolled state -->
+          <div
+            id="action-buttons-right"
+            class="flex flex-col gap-2 items-end pointer-events-none"
+            style="opacity: 0; transition: all 0.3s ease;"
+          >
+            <WorkPopupTrigger client:load />
+            <ContactPopupTrigger client:load />
+          </div>
+        </div>
+      </div>
+
+      <div class="px-4 sm:px-8 sm:mt-12 border-l border-r border-muted-foreground/30 grid-rows-3">
+        <div class="grid grid-cols-1 lg:grid-cols-2 border">
+          <div class="flex flex-col lg:border-r border-b lg:border-b-0">
+            <div class="border-b">
+              <HumidityCard />
+            </div>
+            <!-- <Co2Card /> -->
+            <RadonCard />
+          </div>
+          <div class="h-40 flex w-full">
+            <div class="hidden sm:block border-r"><BlogPreviewCard slug="ascorbic-acid-ph" /></div>
+            <BlogPreviewCard slug="sync-engine" />
+          </div>
+        </div>
+        <div class="grid grid-col-1 lg:grid-cols-5 border-b border-r border-l">
+          <div class="lg:border-r col-span-2 grid grid-rows-2">
+            <BenjiQuote />
+            <div class="border-b lg:border-b-0 flex flex-col items-center justify-center">
+              <CellPaintVideo />
             </div>
           </div>
-          <div class="border col-span-2">
-            <div class="grid-cols-2">
+          <div class="col-span-2">
+            <div class="">
               <img src="/images/conquer-biomark.png" alt="Conquer Biomark" />
-              <div class="border-t">ChatDB here</div>
+            </div>
+            <div class="h-64 border-t flex flex-col items-center justify-center overflow-y-hidden">
+              <iframe
+                src={constructChatdbUrl({
+                  appId: 'a2c51623-badd-4ef2-a830-e7c39a1df343',
+                  chartId: 'b4e44442-8236-42bd-8bb5-95f88fbf672c',
+                  hideHeader: false,
+                  hideFooter: true,
+                  hideTitle: false,
+                  hideXAxis: false,
+                  hideYAxis: false,
+                })}
+                title="Top 10 Most Observed Crocodile Species"
+                loading="lazy"
+                style="border:0;width:100%;height:100%;display:block;overflow-y:hidden;"
+                allow="clipboard-read; clipboard-write"></iframe>
             </div>
           </div>
-          <div class="border"><img src="/images/121health.webp" alt="Conquer Biomark" /></div>
-        </div>
-        <div class="grid grid-cols-3">
-          <div class="h-20 border"></div>
-          <div class="h-20 border">Altum Labs Here</div>
-          <ProfileCard />
-        </div>
-      </div>
-      <div class="mt-24">
-        <div class="border-l border-muted-foreground/30 pl-8 border-r">
-          <h1 class="font-mono font-bold md:text-3xl text-muted-foreground mt-24">OneTwentyOne</h1>
-          <p class="font-medium text-muted-foreground/80 mt-2">
-            Longevity Company in partnership with Michael Lustgarten
-          </p>
+          <div class="hidden lg:block border-l">
+            <img
+              src="/images/121health.webp"
+              alt="Conquer Biomark"
+              class="object-cover h-full w-full"
+            />
+          </div>
         </div>
       </div>
-      <div>
-        <div>
-          <h1 class="font-mono font-bold md:text-3xl text-muted-foreground mt-24">
-            thiscellpaintingdoesnotexist.com
-          </h1>
-          <p class="font-medium text-muted-foreground/80 mt-2"></p>
+
+      <div class="grid grid-rows-[auto_1fr] mt-24">
+        <div class="relative">
+          <SHV />
+          <OneTwentyOne />
+          <Altum />
         </div>
       </div>
     </div>
+    <div>
+      <h1
+        class="font-mono font-bold md:text-[16rem] text-muted-foreground uppercase dither-2xl text-center"
+      >
+        Godfrey
+      </h1>
+    </div>
     <!-- <MasonryGrid cells={cells} className="p-2" columns={4} gap={8} /> -->
     <!-- <ProfileCard /> -->
-    <!-- Add extra content to ensure scrolling works -->
-    <div class="h-screen"></div>
   </div>
   <div class="fixed bottom-4 left-[calc(50%-6rem)]">
     <HumanOrMachine defaultValue="human" machineLink="/blog/ai" humanLink="/" client:load />
   </div>
+  <WorkPopup client:load />
+  <ContactPopup client:load />
+
+  <script>
+    let rafId: number;
+
+    const headerContainer = document.getElementById('header-container');
+    const fullstackLabel = document.getElementById('fullstack-label');
+    const descriptionText = document.getElementById('description-text');
+    const actionButtons = document.getElementById('action-buttons');
+    const actionButtonsRight = document.getElementById('action-buttons-right');
+    const skillsSidebar = document.getElementById('skills-sidebar');
+    const skillsLabel = document.getElementById('skills-label');
+
+    const viewport = window.innerWidth;
+
+    const updateHeader = () => {
+      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+
+      const triggerPoint = 25;
+      const transitionDuration = 25;
+
+      const progress = Math.min(Math.max((scrollY - triggerPoint) / transitionDuration, 0), 1);
+
+      if (
+        !headerContainer ||
+        !fullstackLabel ||
+        !descriptionText ||
+        !actionButtons ||
+        !actionButtonsRight ||
+        !skillsSidebar ||
+        !skillsLabel
+      ) {
+        return;
+      }
+
+      if (progress > 0) {
+        headerContainer.style.paddingTop = `${16 - 8 * progress}px`;
+        headerContainer.style.paddingBottom = `${16 - 12 * progress}px`;
+
+        descriptionText.style.opacity = `${1 - progress}`;
+        descriptionText.style.maxHeight = `${80 * (1 - progress)}px`;
+
+        skillsSidebar.style.opacity = `${1 - progress}`;
+        skillsLabel.style.opacity = `${1 - progress}`;
+
+        fullstackLabel.style.transform = `translateY(${progress * 102}px)`;
+        fullstackLabel.style.marginBottom = `${8 * (1 - progress)}px`;
+        fullstackLabel.style.borderLeft = progress > 0.5 ? 'none' : '';
+
+        actionButtons.style.opacity = `${1 - progress}`;
+        actionButtons.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
+        actionButtonsRight.style.opacity = `${progress}`;
+        actionButtonsRight.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+      } else {
+        headerContainer.style.paddingTop = '16px';
+        headerContainer.style.paddingBottom = '16px';
+        descriptionText.style.opacity = '1';
+        descriptionText.style.maxHeight = '80px';
+        skillsSidebar.style.opacity = '1';
+        skillsLabel.style.opacity = '1';
+        fullstackLabel.style.transform = 'translateY(0)';
+
+        fullstackLabel.style.paddingLeft = viewport < 640 ? '16px' : '32px';
+        fullstackLabel.style.marginBottom = '8px';
+        fullstackLabel.style.borderLeft = '';
+        actionButtons.style.opacity = '1';
+        actionButtons.style.pointerEvents = 'auto';
+        actionButtonsRight.style.opacity = '0';
+        actionButtonsRight.style.pointerEvents = 'none';
+      }
+    };
+
+    const onScroll = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateHeader);
+    };
+
+    // Listen to all possible scroll events
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
+
+    // Handle Astro view transitions
+    document.addEventListener('astro:page-load', () => {
+      updateHeader();
+    });
+
+    // Initial call
+    updateHeader();
+  </script>
 </Layout>

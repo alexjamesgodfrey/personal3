@@ -1,0 +1,20 @@
+---
+import OptimalityCard from '@alexgodfrey/web/components/conquer/optimality-card.tsx';
+import AirthingsStat from '@alexgodfrey/web/components/grid/airthings/airthings-stat.astro';
+---
+
+<AirthingsStat queryType="radon" serial="studioSerial" label="Radon" location="Studio" server:defer>
+  <OptimalityCard
+    slot="fallback"
+    label="Radon"
+    description="Studio"
+    statusLabel="Loading"
+    optimality="optimal"
+    value="scramble"
+    ranges={[
+      { label: 'Safe', color: 'bg-green-500', min: 0, max: 100, progress: 0.5 },
+      { label: 'Elevated', color: 'bg-yellow-500', min: 100, max: 300 },
+      { label: 'High Risk', color: 'bg-red-500', min: 300, max: 1000 },
+    ]}
+  />
+</AirthingsStat>

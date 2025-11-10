@@ -1,0 +1,52 @@
+---
+import Icon from '../icon-sprite';
+import { Logo, Logos } from '../utilities/logo';
+---
+
+<section class="grid grid-cols-1 lg:grid-cols-[40%_1fr] py-10 border-y max-h-screen">
+  <div class="sticky top-48 self-start">
+    <div class="px-8 border-l border-muted-foreground/30 flex flex-col">
+      <div class="flex items-center gap-2">
+        <h1 class="font-mono font-bold md:text-3xl text-muted-foreground">OneTwentyOne</h1>
+        <Logo name={Logos.OneTwentyOne} className="size-4.5" />
+      </div>
+      <div
+        class="flex items-center gap-2 text-sm text-muted-foreground/80 uppercase font-mono mt-1"
+      >
+        <Icon name="pinCircle" className="size-3.5" />
+        <p class="font-medium text-muted-foreground/80">Ithaca // San Francisco, 2023-</p>
+      </div>
+      <p class="font-medium text-muted-foreground/80 mt-2">Founder, CEO</p>
+    </div>
+    <div class="px-8 mt-4 text-muted-foreground/80 flex flex-col gap-2">
+      <p>
+        Sutter Hill Ventures is a quiet powerhouse of Silicon Valley, and employs an internal team
+        of around 10 engineers to (1) explore the frontier of technology and (2) build products with
+        portfolio companies.
+      </p>
+      <p>
+        Many of my experiments have been with <a
+          href="https://www.modelcontextprotocol.org"
+          class="underline">Model Context Protocol</a
+        >, a framework for adding context to language models. Such projects include:
+      </p>
+      <ul class="list-disc list-inside pl-4">
+        <li>AgentDB</li>
+        <li>ChatDB</li>
+      </ul>
+      <p>
+        Additionally, I've had the privilege of building technical solutions for the following
+        portfolio companies:
+      </p>
+      <ul class="list-disc list-inside pl-4">
+        <li>Ridge Biosciences</li>
+        <li>Integrated Biosciences</li>
+        <li>Run</li>
+        <li>Aria Networks</li>
+      </ul>
+    </div>
+  </div>
+  <div class="bg-gray-100 h-64">
+    <div>hi</div>
+  </div>
+</section>

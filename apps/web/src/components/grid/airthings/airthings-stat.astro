@@ -1,7 +1,7 @@
 ---
 import { formatDistanceToNow } from 'date-fns';
-import { getCO2, getHumidity, getRadon, type Room } from '../../lib/agent-db';
-import OptimalityCard from '../conquer/optimality-card.tsx';
+import { getCO2, getHumidity, getRadon, type Room } from '../../../lib/agent-db';
+import OptimalityCard from '../../conquer/optimality-card.tsx';
 
 interface Props {
   queryType: 'humidity' | 'co2' | 'radon';

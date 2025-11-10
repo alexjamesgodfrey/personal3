@@ -3,6 +3,8 @@ import type { CSSProperties } from 'react';
 
 const iconDefs = {
   arrowUpRight: 'arrow-up-right',
+  squareStackUp: 'square-stack-up',
+  pinCircle: 'pin-circle',
 };
 
 type IconProps = {
