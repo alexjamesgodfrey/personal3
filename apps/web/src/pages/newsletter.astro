@@ -1,0 +1,65 @@
+---
+import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import { NewsletterForm } from '../components/newsletter-form';
+
+const title = 'Newsletter | Alex Godfrey';
+const description =
+  'Signal-over-noise updates on what I am building, reading, and testing in longevity-focused software.';
+---
+
+<Layout title={title} description={description}>
+  <main class="relative isolate overflow-hidden bg-background text-foreground">
+    <div class="pointer-events-none absolute inset-0 opacity-70 blur-3xl">
+      <div
+        class="absolute left-[-10%] top-[-10%] h-64 w-64 rotate-6 bg-[radial-gradient(circle_at_center,theme(colors.amber.300)_0,transparent_60%)]"
+      >
+      </div>
+      <div
+        class="absolute bottom-[-15%] right-[-10%] h-80 w-80 bg-[radial-gradient(circle_at_center,theme(colors.emerald.300)_0,transparent_55%)]"
+      >
+      </div>
+      <div
+        class="absolute left-[20%] top-[45%] h-64 w-64 bg-[radial-gradient(circle_at_center,theme(colors.sky.200)_0,transparent_60%)]"
+      >
+      </div>
+    </div>
+
+    <section class="relative mx-4 my-10 flex flex-col gap-10 sm:mx-12 sm:my-16 lg:mx-24 lg:my-20">
+      <div
+        class="flex flex-col gap-4 rounded-2xl border border-muted-foreground/30 bg-card/80 p-8 shadow-lg backdrop-blur-lg"
+      >
+        <div
+          class="flex items-center gap-3 text-xs font-mono uppercase tracking-[0.3em] text-muted-foreground"
+        >
+          <span class="h-px w-12 bg-muted-foreground/60"></span>
+          Newsletter
+        </div>
+        <div class="grid items-start gap-6 lg:grid-cols-[2fr,1fr]">
+          <div class="space-y-4">
+            <h1 class="text-4xl font-semibold leading-tight sm:text-5xl">
+              Field notes, not fluff.
+            </h1>
+            <p class="max-w-3xl text-base text-muted-foreground sm:text-lg">
+              A concise stream of what I am building for longevity, the personal experiments worth
+              sharing, and the strongest ideas I encounter while shipping products.
+            </p>
+            <div
+              class="flex flex-wrap gap-2 text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground"
+            >
+              <span class="rounded-full border border-muted-foreground/40 px-3 py-1"
+                >Longevity Engineering</span
+              >
+              <span class="rounded-full border border-muted-foreground/40 px-3 py-1">Readings</span>
+              <span class="rounded-full border border-muted-foreground/40 px-3 py-1">Lab Notes</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr,0.65fr]">
+        <NewsletterForm client:load className="h-full" />
+      </div>
+    </section>
+  </main>
+</Layout>

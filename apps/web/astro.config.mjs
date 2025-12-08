@@ -17,6 +17,8 @@ export default defineConfig({
       CHATDB_URL: envField.string({ context: 'client', access: 'public' }),
       AGENTDB_API_URL: envField.string({ context: 'server', access: 'public' }),
       AGENTDB_API_KEY: envField.string({ context: 'server', access: 'secret' }),
+      DATABASE_URL: envField.string({ context: 'server', access: 'secret' }),
+      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
     },
   },
 
