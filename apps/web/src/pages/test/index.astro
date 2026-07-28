@@ -5,7 +5,11 @@ import Layout from '../../layouts/BaseLayout.astro';
 export const prerender = true;
 ---
 
-<Layout title="3D Dither Gallery | Alex Godfrey" description="A canvas rendering test page.">
+<Layout
+  title="3D Dither Gallery | Alex Godfrey"
+  description="A canvas rendering test page."
+  robots="noindex, nofollow"
+>
   <main class="min-h-screen p-4">
     <div id="canvas-container" class="w-64 h-64 bg-red-100">
       <DitherCanvas client:visible />

@@ -1,17 +1,23 @@
 ---
-import HumanOrMachine from '@alexgodfrey/web/components/human-or-machine.astro';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
-import { noteSlugFromId, socialImageVersion } from '@alexgodfrey/web/lib/og/note-social-image';
+import { socialImageVersion } from '@alexgodfrey/web/lib/og/note-social-image';
+import {
+  getPublishedNotes,
+  publishedNoteSlug,
+} from '@alexgodfrey/web/lib/published-notes';
+import {
+  absoluteUrl,
+  articleStructuredData,
+} from '@alexgodfrey/web/lib/site-content';
 import { validateNote } from '@alexgodfrey/web/lib/validators';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 
 export const prerender = true;
 
-// Generate static paths for all notes
 export async function getStaticPaths() {
-  const allNotes = await getCollection('notes');
+  const allNotes = await getPublishedNotes();
   return allNotes.map((note) => {
-    const slug = noteSlugFromId(note.id);
+    const slug = publishedNoteSlug(note);
     return {
       params: { slug },
       props: { note },
@@ -22,8 +28,8 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const frontmatter = validateNote(note.data);
 const { Content } = await render(note);
-const rawMarkdown = note.body;
-const slug = noteSlugFromId(note.id);
+const slug = publishedNoteSlug(note);
+const markdownUrl = `/blog/${slug}.md`;
 const socialImagePath = `/og/${slug}.png?v=${socialImageVersion({
   slug,
   title: frontmatter.title,
@@ -32,6 +38,14 @@ const socialImagePath = `/og/${slug}.png?v=${socialImageVersion({
   updatedDate: frontmatter.updatedDate?.toISOString(),
 })}`;
 const socialImageAlt = `${frontmatter.title} — an article by Alex Godfrey`;
+const structuredData = articleStructuredData({
+  title: frontmatter.title,
+  description: frontmatter.description,
+  slug,
+  publishedDate: frontmatter.pubDate,
+  updatedDate: frontmatter.updatedDate,
+  imageUrl: absoluteUrl(socialImagePath),
+});
 ---
 
 <Layout
@@ -44,21 +58,27 @@ const socialImageAlt = `${frontmatter.title} — an article by Alex Godfrey`;
   ogType="article"
   publishedTime={frontmatter.pubDate}
   modifiedTime={frontmatter.updatedDate}
+  markdownUrl={markdownUrl}
+  structuredData={structuredData}
 >
   <article class="max-w-3xl mx-auto px-4 py-8">
     <header class="mb-8 relative pt-10 sm:pt-0">
-      <button
-        id="copy-markdown-btn"
-        class="absolute -top-2 right-4 sm:top-0 px-3 py-1.5 text-xs font-mono text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-muted/50 transition-colors"
-      >
-        Copy Markdown
-      </button>
-      <script
-        is:inline
-        type="application/json"
-        id="markdown-content"
-        set:html={JSON.stringify(rawMarkdown)}
-      />
+      <div class="absolute -top-2 right-4 sm:top-0 flex items-center gap-2">
+        <a
+          href={markdownUrl}
+          type="text/markdown"
+          class="px-3 py-1.5 text-xs font-mono text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-muted/50 transition-colors"
+        >
+          Markdown
+        </a>
+        <button
+          id="copy-markdown-btn"
+          data-markdown-url={markdownUrl}
+          class="px-3 py-1.5 text-xs font-mono text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-muted/50 transition-colors"
+        >
+          Copy Markdown
+        </button>
+      </div>
       <h1 class="font-mono font-semibold text-3xl text-foreground mb-2">
         {frontmatter.title}
       </h1>
@@ -83,22 +103,14 @@ const socialImageAlt = `${frontmatter.title} — an article by Alex Godfrey`;
     <div class="prose prose-invert max-w-none [&_p]:mb-4">
       <Content />
     </div>
-    {
-      frontmatter.humanLink && typeof frontmatter.humanLink === 'string' && (
-        <div class="fixed bottom-4 left-[calc(50%-6rem)]">
-          <HumanOrMachine defaultValue="machine" machineLink={`/blog/${slug}`} humanLink={'/'} />
-        </div>
-      )
-    }
   </article>
 </Layout>
 
 <script>
   const attachCopyHandler = () => {
     const copyBtn = document.getElementById('copy-markdown-btn');
-    const markdownScript = document.getElementById('markdown-content');
 
-    if (!copyBtn || !markdownScript) {
+    if (!copyBtn) {
       return;
     }
 
@@ -109,7 +121,17 @@ const socialImageAlt = `${frontmatter.title} — an article by Alex Godfrey`;
     const handleClick = async (event: MouseEvent) => {
       event.preventDefault();
       try {
-        const markdown = JSON.parse(markdownScript.textContent || '""');
+        const markdownUrl = copyBtn.dataset.markdownUrl;
+        if (!markdownUrl) {
+          throw new Error('Markdown URL is unavailable.');
+        }
+        const response = await fetch(markdownUrl, {
+          headers: { Accept: 'text/markdown' },
+        });
+        if (!response.ok) {
+          throw new Error(`Markdown request failed with ${response.status}.`);
+        }
+        const markdown = await response.text();
         await navigator.clipboard.writeText(markdown);
         const originalText = copyBtn.textContent;
         copyBtn.textContent = 'Copied!';

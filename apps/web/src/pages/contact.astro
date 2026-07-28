@@ -1,0 +1,56 @@
+---
+import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import { siteContent } from '@alexgodfrey/web/lib/site-content';
+import Icon, { type IconName } from '../components/icon-sprite';
+
+export const prerender = true;
+
+const iconByContact: Record<string, IconName> = {
+  email: 'squareStackUp',
+  github: 'github',
+  linkedin: 'linkedin',
+};
+---
+
+<Layout
+  title="Contact Alex Godfrey"
+  description="Email Alex Godfrey or find his verified GitHub and LinkedIn profiles."
+  markdownUrl="/contact.md"
+>
+  <main class="mx-auto flex min-h-screen w-full max-w-2xl items-center px-4 py-16">
+    <section class="w-full rounded-xl border-2 border-border bg-background p-6 sm:p-10">
+      <p class="font-mono text-sm uppercase text-muted-foreground">Contact</p>
+      <h1 class="mt-2 text-3xl font-semibold">{siteContent.name}</h1>
+      <p class="mt-3 text-muted-foreground">Email is the most direct way to get in touch.</p>
+
+      <div class="mt-8 space-y-3">
+        {
+          siteContent.contact.map((method) => (
+            <a
+              href={method.href}
+              rel={method.href.startsWith('https://') ? 'me noreferrer' : undefined}
+              class="flex items-center gap-3 rounded-md border border-border p-3 transition-colors hover:bg-muted/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              <Icon
+                name={iconByContact[method.id] ?? 'squareStackUp'}
+                className="size-5 text-muted-foreground"
+              />
+              <span>
+                <span class="block font-mono text-xs uppercase text-muted-foreground">
+                  {method.label}
+                </span>
+                <span>{method.display}</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      <nav aria-label="Related pages" class="mt-8 flex flex-wrap gap-4 font-mono text-sm">
+        <a href="/" class="underline">Homepage</a>
+        <a href="/resume.md" type="text/markdown" class="underline">Résumé in Markdown</a>
+        <a href="/contact.md" type="text/markdown" class="underline">This page in Markdown</a>
+      </nav>
+    </section>
+  </main>
+</Layout>

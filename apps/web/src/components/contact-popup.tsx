@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@alexgodfrey/ui/components/ui/dialog';
 import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
+import { siteContent } from '@alexgodfrey/web/lib/site-content';
 import Icon, { type IconName } from './icon-sprite';
 
 interface ContactMethod {
@@ -19,20 +20,20 @@ interface ContactMethod {
 const contactMethods: ContactMethod[] = [
   {
     label: 'Email',
-    value: 'me@alexgodfrey.com',
-    href: 'mailto:me@alexgodfrey.com',
+    value: siteContent.contact[0].display,
+    href: siteContent.contact[0].href,
     icon: 'squareStackUp',
   },
   {
     label: 'LinkedIn',
-    value: 'linkedin.com/in/alexgodfrey',
-    href: 'https://linkedin.com/in/alexgodfreyapi',
+    value: siteContent.contact[1].display,
+    href: siteContent.contact[1].href,
     icon: 'linkedin',
   },
   {
     label: 'GitHub',
-    value: 'github.com/alexjamesgodfrey',
-    href: 'https://github.com/alexjamesgodfrey',
+    value: siteContent.contact[2].display,
+    href: siteContent.contact[2].href,
     icon: 'github',
   },
 ];

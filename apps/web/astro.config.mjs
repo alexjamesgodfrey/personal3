@@ -55,7 +55,7 @@ const contentSecurityPolicy =
 
 export default defineConfig({
   integrations: [react(), mdx()],
-  site: 'https://alexgodfrey.com',
+  site: 'https://www.alexgodfrey.com',
   logger: configEnvironment.ASTRO_LOG_FORMAT === 'json' ? logHandlers.json() : undefined,
   // Shiki emits inline token styles that cannot be covered by Astro's generated
   // CSP hashes. Prism uses classes and remains compatible with enforcement.

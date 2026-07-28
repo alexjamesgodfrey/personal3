@@ -12,6 +12,9 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
+  markdownUrl?: string;
+  robots?: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
@@ -24,6 +27,9 @@ const {
   ogType = 'website',
   publishedTime,
   modifiedTime,
+  markdownUrl,
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+  structuredData,
 } = Astro.props;
 
 const siteOrigin = Astro.site ?? Astro.url.origin;
@@ -41,7 +47,22 @@ const ogImageURL = new URL(ogImage, siteOrigin);
     <Font cssVariable="--font-berkeley-mono" preload />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Alex Godfrey" />
+    <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="Alex Godfrey" href="/feed.xml" />
+    {
+      markdownUrl && (
+        <link
+          rel="alternate"
+          type="text/markdown"
+          title={`${title} in Markdown`}
+          href={new URL(markdownUrl, siteOrigin)}
+        />
+      )
+    }
+    <link rel="me" href="https://www.linkedin.com/in/alexgodfreyapi" />
+    <link rel="me" href="https://github.com/alexjamesgodfrey" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
@@ -74,6 +95,15 @@ const ogImageURL = new URL(ogImage, siteOrigin);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
+    {
+      structuredData && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(structuredData).replaceAll('<', '\\u003c')}
+        />
+      )
+    }
   </head>
   <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
     <div class="relative flex min-h-screen flex-col">

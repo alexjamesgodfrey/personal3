@@ -27,6 +27,35 @@ export enum Logos {
   'Cornell' = '/logos/cornell.png',
 }
 
+const logoAlt: Record<Logos, string> = {
+  [Logos.Me]: 'Alex Godfrey',
+  [Logos.SHV]: 'Sutter Hill Ventures',
+  [Logos.OneTwentyOne]: 'OneTwentyOne',
+  [Logos.Altum]: 'Altum Labs',
+  [Logos.TypeScript]: 'TypeScript',
+  [Logos.JavaScript]: 'JavaScript',
+  [Logos.Next]: 'Next.js',
+  [Logos.React]: 'React',
+  [Logos.Node]: 'Node.js',
+  [Logos.PostgreSQL]: 'PostgreSQL',
+  [Logos.GraphQL]: 'GraphQL',
+  [Logos.Express]: 'Express',
+  [Logos.Prisma]: 'Prisma',
+  [Logos.AWS]: 'Amazon Web Services',
+  [Logos.GCP]: 'Google Cloud Platform',
+  [Logos.Azure]: 'Microsoft Azure',
+  [Logos.Tailwind]: 'Tailwind CSS',
+  [Logos.Bootstrap]: 'Bootstrap',
+  [Logos.Sass]: 'Sass',
+  [Logos.Swift]: 'Swift',
+  [Logos.DigitalOcean]: 'DigitalOcean',
+  [Logos.Astro]: 'Astro',
+  [Logos.ReactRouter]: 'React Router',
+  [Logos.Bun]: 'Bun',
+  [Logos.Sentry]: 'Sentry',
+  [Logos.Cornell]: 'Cornell University',
+};
+
 export function Logo({ name, className }: { name: Logos; className?: string }) {
-  return <img src={name} alt={name} className={className} loading="lazy" />;
+  return <img src={name} alt={logoAlt[name]} className={className} loading="lazy" />;
 }

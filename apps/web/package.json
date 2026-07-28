@@ -14,7 +14,8 @@
     "build:json": "astro build --json",
     "check": "astro check",
     "typecheck": "astro check",
-    "test": "pnpm run test:security",
+    "test": "pnpm run test:security && pnpm run test:agent-documents",
+    "test:agent-documents": "tsx --test src/lib/agent-documents.test.ts",
     "test:security": "tsx --test src/lib/security/*.test.ts",
     "preview": "astro preview",
     "astro": "astro"

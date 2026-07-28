@@ -1,6 +1,6 @@
 ---
 import { validateNote } from '@alexgodfrey/web/lib/validators';
-import { getCollection } from 'astro:content';
+import { getPublishedNotes } from '@alexgodfrey/web/lib/published-notes';
 
 interface Props {
   slug: string;
@@ -11,7 +11,7 @@ export const prerender = true;
 const { slug } = Astro.props;
 
 // Get all notes and find the one matching the slug
-const allNotes = await getCollection('notes');
+const allNotes = await getPublishedNotes();
 const note = allNotes.find((n) => {
   const noteSlug = n.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
   return noteSlug === slug;
@@ -45,6 +45,7 @@ const blogUrl = `/blog/${slug}`;
             year: 'numeric',
             month: 'short',
             day: 'numeric',
+            timeZone: 'UTC',
           })
         }
       </time>

@@ -7,7 +7,7 @@ export const noteFrontmatterSchema = z.object({
   pubDate: z.coerce.date(),
   updatedDate: z.coerce.date().optional(),
   relatedPosts: z.array(reference('note')),
-  humanLink: z.string().optional(),
+  draft: z.boolean().default(false),
 });
 
 // infer the noteFrontmatterType

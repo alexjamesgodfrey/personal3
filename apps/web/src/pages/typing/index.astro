@@ -5,7 +5,11 @@ import { Typing } from '../../components/typing';
 export const prerender = true;
 ---
 
-<Layout title="Typing practice | Alex Godfrey" description="A focused typing practice tool.">
+<Layout
+  title="Typing practice | Alex Godfrey"
+  description="A focused typing practice tool."
+  robots="noindex, follow"
+>
   <main class="min-h-screen">
     <Typing client:only="react" />
   </main>

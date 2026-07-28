@@ -23,6 +23,8 @@ const options = [
       return (
         <a
           href={option.href}
+          type={option.value === 'machine' ? 'text/markdown' : undefined}
+          title={option.value === 'machine' ? 'Open the machine-readable Markdown profile' : undefined}
           aria-current={selected ? 'page' : undefined}
           class="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >

@@ -4,14 +4,14 @@ import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
 
 const triggerClass = buttonVariants({
   variant: 'outline',
-  className: 'uppercase font-mono shadow-none !bg-background',
+  className: 'uppercase font-mono !shadow-none !bg-background',
 });
 ---
 
-<button type="button" class={triggerClass} data-work-trigger>
+<a href="#shv-section" class={triggerClass} data-work-trigger>
   <span data-work-label>View Work</span>
   <Kbd className="ml-1 hidden sm:inline" data-work-shortcut>W</Kbd>
-</button>
-<button type="button" class={triggerClass} data-contact-trigger>
+</a>
+<a href="/contact" class={triggerClass} data-contact-trigger>
   Contact<Kbd className="ml-1 hidden sm:inline">C</Kbd>
-</button>
+</a>
