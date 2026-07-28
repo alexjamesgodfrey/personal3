@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export function Typing() {
   const [pw] = useState(new ProblemWordsImp());
 
-  const [words, setWords] = useState(pw.sampleRun());
+  const [words] = useState(pw.sampleRun());
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentWord, setCurrentWord] = useState(words[currentIndex]);
@@ -16,8 +16,6 @@ export function Typing() {
     setCurrentInput('');
   }, [currentIndex]);
 
-  console.log('currentinput', currentInput);
-
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen text-white bg-black">
       <div className="w-full max-w-lg gap-8 flex flex-col">
@@ -25,7 +23,6 @@ export function Typing() {
           {words.map((word, position) => {
             const isProblemWord = pw.isProblemWord(word);
 
-            console.log({ word });
             return (
               <p
                 key={word}

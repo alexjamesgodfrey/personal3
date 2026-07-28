@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/BaseLayout.astro';
+
+export const prerender = true;
+---
+
+<Layout title="Page not found | Alex Godfrey" description="The requested page could not be found.">
+  <main class="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16">
+    <p class="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">404</p>
+    <h1 class="mt-4 text-4xl font-semibold">This page wandered off.</h1>
+    <p class="mt-4 max-w-xl text-muted-foreground">
+      The URL may have changed, or the page may no longer exist.
+    </p>
+    <a
+      href="/"
+      class="mt-8 w-fit rounded-md border border-border px-4 py-2 font-mono text-sm hover:bg-muted"
+    >
+      Return home
+    </a>
+  </main>
+</Layout>

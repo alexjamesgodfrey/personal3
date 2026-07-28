@@ -5,6 +5,11 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "turbo run dev",
+    "dev:web:background": "pnpm --filter @alexgodfrey/web dev:background",
+    "dev:web:json": "pnpm --filter @alexgodfrey/web dev:json",
+    "dev:web:logs": "pnpm --filter @alexgodfrey/web dev:logs",
+    "dev:web:status": "pnpm --filter @alexgodfrey/web dev:status",
+    "dev:web:stop": "pnpm --filter @alexgodfrey/web dev:stop",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
@@ -23,8 +28,19 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.6",
     "prettier": "^3.3.3",
-    "turbo": "^2.0.5",
+    "turbo": "^2.10.6",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.4.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ajv@>=6.0.0 <6.15.0": "6.15.0",
+      "devalue@>=5.0.0 <5.8.2": "5.8.2",
+      "mdast-util-to-hast@>=13.0.0 <13.2.1": "13.2.1",
+      "picomatch@>=2.0.0 <2.3.2": "2.3.2",
+      "picomatch@>=4.0.0 <4.0.5": "4.0.5",
+      "rollup@>=4.0.0 <4.62.3": "4.62.3",
+      "tar@>=7.0.0 <7.5.22": "7.5.22"
+    }
   }
 }

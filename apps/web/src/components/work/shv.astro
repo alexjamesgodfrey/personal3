@@ -1,4 +1,6 @@
 ---
+import chatdbScreenshot from '../../assets/images/chatdb.webp';
+import { Picture } from 'astro:assets';
 import Icon from '../icon-sprite';
 import { Logo, Logos } from '../utilities/logo';
 ---
@@ -67,6 +69,16 @@ import { Logo, Logos } from '../utilities/logo';
     </div>
   </div>
   <div class="hidden md:block h-auto">
-    <img src="/images/chatdb.webp" alt="SHV" />
+    <Picture
+      src={chatdbScreenshot}
+      formats={['avif']}
+      fallbackFormat="webp"
+      widths={[640, 960, 1400, 1900]}
+      sizes="(min-width: 768px) 60vw, 100vw"
+      alt="ChatDB interface built at Sutter Hill Ventures"
+      loading="lazy"
+      decoding="async"
+      class="h-auto w-full"
+    />
   </div>
 </section>

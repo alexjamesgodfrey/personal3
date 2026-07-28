@@ -1,18 +1,7 @@
 ---
-// import { Card, CardContent, CardHeader } from '@alexgodfrey/ui/components/ui/card';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
-import { validateNote } from '@alexgodfrey/web/lib/validators';
 
-const matches = import.meta.glob('@alexgodfrey/web/content/notes/**/*.{md,mdx}', {
-  eager: true,
-});
-const notes: any = Object.values(matches);
-
-console.log(notes);
-const parsedNotes = notes.map((note: any) => ({
-  ...note,
-  frontmatter: validateNote(note.frontmatter),
-}));
+export const prerender = true;
 ---
 
 <Layout>
@@ -54,15 +43,4 @@ const parsedNotes = notes.map((note: any) => ({
         style="border:0;width:100%;height:100%;border-radius:16px;display:block;"
         allow="clipboard-read; clipboard-write"></iframe>
     </div> -->
-  <!-- 
-    {
-      parsedNotes.map((note: any) => (
-        <Card className="font-mono w-5/6 max-w-xs">
-          <CardHeader className="font-semibold">{note.frontmatter.title}</CardHeader>
-          <CardContent className="text-sm">
-            <p>{note.frontmatter.description}</p>
-          </CardContent>
-        </Card>
-      ))
-    } -->
 </Layout>

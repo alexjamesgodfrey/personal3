@@ -1,4 +1,6 @@
 ---
+import biomarkOverview from '../../assets/images/biomark-overview.webp';
+import { Picture } from 'astro:assets';
 import Icon from '../icon-sprite';
 import { Logo, Logos } from '../utilities/logo';
 ---
@@ -38,7 +40,17 @@ import { Logo, Logos } from '../utilities/logo';
   </div>
   <div class="hidden md:block h-auto">
     <div>
-      <img src="/images/biomark-overview.webp" alt="121 Health" />
+      <Picture
+        src={biomarkOverview}
+        formats={['avif']}
+        fallbackFormat="webp"
+        widths={[640, 960, 1344, 1920]}
+        sizes="(min-width: 768px) 60vw, 100vw"
+        alt="OneTwentyOne biomarker overview"
+        loading="lazy"
+        decoding="async"
+        class="h-auto w-full"
+      />
     </div>
   </div>
 </section>

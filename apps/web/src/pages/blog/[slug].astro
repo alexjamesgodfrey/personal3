@@ -1,6 +1,7 @@
 ---
-import { HumanOrMachine } from '@alexgodfrey/web/components/human-or-machine';
+import HumanOrMachine from '@alexgodfrey/web/components/human-or-machine.astro';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
+import { noteSlugFromId, socialImageVersion } from '@alexgodfrey/web/lib/og/note-social-image';
 import { validateNote } from '@alexgodfrey/web/lib/validators';
 import { getCollection, render } from 'astro:content';
 
@@ -10,10 +11,7 @@ export const prerender = true;
 export async function getStaticPaths() {
   const allNotes = await getCollection('notes');
   return allNotes.map((note) => {
-    // Extract slug from the file path
-    // e.g., "ascorbic-acid-ph/index.mdx" -> "ascorbic-acid-ph"
-    // e.g., "test.mdx" -> "test"
-    const slug = note.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+    const slug = noteSlugFromId(note.id);
     return {
       params: { slug },
       props: { note },
@@ -25,11 +23,28 @@ const { note } = Astro.props;
 const frontmatter = validateNote(note.data);
 const { Content } = await render(note);
 const rawMarkdown = note.body;
-
-console.log(frontmatter);
+const slug = noteSlugFromId(note.id);
+const socialImagePath = `/og/${slug}.png?v=${socialImageVersion({
+  slug,
+  title: frontmatter.title,
+  description: frontmatter.description,
+  publishedDate: frontmatter.pubDate.toISOString(),
+  updatedDate: frontmatter.updatedDate?.toISOString(),
+})}`;
+const socialImageAlt = `${frontmatter.title} — an article by Alex Godfrey`;
 ---
 
-<Layout title={frontmatter.title} description={frontmatter.description}>
+<Layout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  ogImage={socialImagePath}
+  ogImageAlt={socialImageAlt}
+  ogImageWidth={1200}
+  ogImageHeight={630}
+  ogType="article"
+  publishedTime={frontmatter.pubDate}
+  modifiedTime={frontmatter.updatedDate}
+>
   <article class="max-w-3xl mx-auto px-4 py-8">
     <header class="mb-8 relative pt-10 sm:pt-0">
       <button
@@ -39,6 +54,7 @@ console.log(frontmatter);
         Copy Markdown
       </button>
       <script
+        is:inline
         type="application/json"
         id="markdown-content"
         set:html={JSON.stringify(rawMarkdown)}
@@ -70,12 +86,7 @@ console.log(frontmatter);
     {
       frontmatter.humanLink && typeof frontmatter.humanLink === 'string' && (
         <div class="fixed bottom-4 left-[calc(50%-6rem)]">
-          <HumanOrMachine
-            defaultValue="machine"
-            machineLink={`/blog/${note.id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '')}`}
-            humanLink={'/'}
-            client:load
-          />
+          <HumanOrMachine defaultValue="machine" machineLink={`/blog/${slug}`} humanLink={'/'} />
         </div>
       )
     }
@@ -95,7 +106,7 @@ console.log(frontmatter);
       return;
     }
 
-    const handleClick = async (event) => {
+    const handleClick = async (event: MouseEvent) => {
       event.preventDefault();
       try {
         const markdown = JSON.parse(markdownScript.textContent || '""');
@@ -120,7 +131,5 @@ console.log(frontmatter);
     copyBtn.dataset.copyHandlerAttached = 'true';
   };
 
-  document.addEventListener('astro:page-load', attachCopyHandler);
-  document.addEventListener('astro:after-swap', attachCopyHandler);
   attachCopyHandler();
 </script>

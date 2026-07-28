@@ -1,16 +1,14 @@
 ---
-import { DitherCanvas } from "../../components/dither-canvas";
-import "../../styles/global.css";
+import { DitherCanvas } from '../../components/dither-canvas';
+import Layout from '../../layouts/BaseLayout.astro';
+
+export const prerender = true;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>3D Dither Gallery</title>
-  </head>
-  <body class="m-0 p-0 h-screen">
+<Layout title="3D Dither Gallery | Alex Godfrey" description="A canvas rendering test page.">
+  <main class="min-h-screen p-4">
     <div id="canvas-container" class="w-64 h-64 bg-red-100">
-      <DitherCanvas client:load />
+      <DitherCanvas client:visible />
     </div>
-  </body>
-</html>
+  </main>
+</Layout>

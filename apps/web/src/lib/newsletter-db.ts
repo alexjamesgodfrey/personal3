@@ -1,6 +1,7 @@
 import { DATABASE_URL } from 'astro:env/server';
 import fs from 'fs';
 import pkg from 'pg';
+import type { Pool as PoolType } from 'pg';
 
 const { Pool } = pkg;
 
@@ -20,7 +21,7 @@ export type SubscribeResult = {
 };
 
 const globalForNewsletter = globalThis as typeof globalThis & {
-  newsletterPool?: Pool;
+  newsletterPool?: PoolType;
   newsletterTableReady?: Promise<void>;
 };
 
@@ -100,7 +101,8 @@ function mapRow(row: any): NewsletterSubscriber {
     email: row.email,
     name: row.name,
     status: row.status === 'unsubscribed' ? 'unsubscribed' : 'subscribed',
-    subscribed_at: row.subscribed_at instanceof Date ? row.subscribed_at : new Date(row.subscribed_at),
+    subscribed_at:
+      row.subscribed_at instanceof Date ? row.subscribed_at : new Date(row.subscribed_at),
     unsubscribed_at:
       row.unsubscribed_at instanceof Date || row.unsubscribed_at === null
         ? row.unsubscribed_at
@@ -164,7 +166,7 @@ export async function unsubscribeFromNewsletter(
     [normalizedEmail, source || null],
   );
 
-  if (updated.rowCount > 0) {
+  if ((updated.rowCount ?? 0) > 0) {
     return mapRow(updated.rows[0]);
   }
 

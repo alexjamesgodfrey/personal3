@@ -1,8 +1,12 @@
 ---
+import Layout from '../../layouts/BaseLayout.astro';
 import { Typing } from '../../components/typing';
-import '../../styles/global.css';
+
+export const prerender = true;
 ---
 
-<div>
-  <Typing client:only />
-</div>
+<Layout title="Typing practice | Alex Godfrey" description="A focused typing practice tool.">
+  <main class="min-h-screen">
+    <Typing client:only="react" />
+  </main>
+</Layout>

@@ -12,6 +12,14 @@ interface Props {
 
 const { queryType, serial, label, location } = Astro.props;
 
+// Keep the shell page static while caching each live server-island response
+// at the edge. Stale values remain available while a new reading is fetched.
+Astro.cache.set({
+  maxAge: 120,
+  swr: 180,
+  tags: ['airthings', `airthings:${queryType}`, `airthings:${serial}`],
+});
+
 // Fetch latest record based on query type
 const row =
   queryType === 'humidity'
@@ -177,4 +185,4 @@ const data = {
 };
 ---
 
-<OptimalityCard {...data} client:load />
+<OptimalityCard {...data} />

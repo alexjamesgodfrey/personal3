@@ -50,8 +50,6 @@ export default function Icon({
   // Use relative URL to avoid CORS issues
   const spriteHref = `/icon-sprite.svg?v=${version}#icon-${iconId}`;
 
-  console.log(spriteHref);
-
   return (
     <svg
       className={cn('fill-current', className)}

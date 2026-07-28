@@ -1,37 +1,29 @@
-import { Dialog, DialogContent } from '@alexgodfrey/ui/components/ui/dialog';
-import * as React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@alexgodfrey/ui/components/ui/dialog';
 
-export function ProfilePopup() {
-  const [open, setOpen] = React.useState(false);
+interface ProfilePopupProps {
+  imageSrc: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
-  // Close on Escape
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && open) {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open]);
-
-  // Expose open function globally for image click
-  React.useEffect(() => {
-    (window as any).openProfilePopup = () => setOpen(true);
-    return () => {
-      delete (window as any).openProfilePopup;
-    };
-  }, []);
-
+export function ProfilePopup({ imageSrc, open, onOpenChange }: ProfilePopupProps) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="max-w-2xl max-h-[90vh] overflow-hidden pb-4 p-0 gap-0 border-0 shadow-none bg-background"
         showCloseButton={false}
       >
+        <DialogTitle className="sr-only">Alex Godfrey profile photo</DialogTitle>
+        <DialogDescription className="sr-only">
+          A full-size portrait of Alex Godfrey.
+        </DialogDescription>
         <img
-          src="/images/profile.webp"
+          src={imageSrc}
           alt="Alex Godfrey"
           className="w-full h-full max-h-[90vh] object-contain relative"
         />

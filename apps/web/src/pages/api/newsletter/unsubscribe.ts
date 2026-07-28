@@ -1,43 +1,30 @@
 import type { APIRoute } from 'astro';
 import { unsubscribeFromNewsletter } from '../../../lib/newsletter-db';
+import { guardNewsletterRequest } from '../../../lib/security/newsletter-guard';
+import {
+  classifyNewsletterFailure,
+  logNewsletterFailure,
+  newsletterErrorResponse,
+  newsletterRequestId,
+  newsletterSuccessResponse,
+} from '../../../lib/security/newsletter-response';
 
 export const prerender = false;
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export const POST: APIRoute = async ({ request }) => {
-  let email = '';
-
+export const POST: APIRoute = async (context) => {
+  const requestId = newsletterRequestId(context.request);
   try {
-    const body = (await request.json()) as { email?: string };
-    email = (body.email || '').trim().toLowerCase();
+    const guarded = await guardNewsletterRequest(context, 'unsubscribe');
+    if (!guarded.shortCircuit) {
+      await unsubscribeFromNewsletter(guarded.payload.email, 'self-service');
+    }
+    return newsletterSuccessResponse('unsubscribe', requestId);
   } catch (error) {
-    return Response.json({ status: 'error', error: 'Invalid request payload.' }, { status: 400 });
-  }
-
-  if (!email || !emailPattern.test(email)) {
-    return Response.json(
-      { status: 'error', error: 'Please provide a valid email address.' },
-      { status: 400 },
-    );
-  }
-
-  try {
-    const subscriber = await unsubscribeFromNewsletter(email, 'self-service');
-    return Response.json({
-      status: 'ok',
-      message: 'You have been unsubscribed.',
-      subscriber: {
-        email: subscriber.email,
-        status: subscriber.status,
-        unsubscribed_at: subscriber.unsubscribed_at,
-      },
+    logNewsletterFailure({
+      action: 'unsubscribe',
+      category: classifyNewsletterFailure(error),
+      requestId,
     });
-  } catch (error: unknown) {
-    console.error('newsletter-unsubscribe-error', error);
-    return Response.json(
-      { status: 'error', error: 'Unable to process your request right now. Please try again.' },
-      { status: 500 },
-    );
+    return newsletterErrorResponse(error, requestId);
   }
 };

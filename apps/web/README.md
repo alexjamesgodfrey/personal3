@@ -1,46 +1,78 @@
-# Astro Starter Kit: Basics
+# Alex Godfrey web app
+
+The site is an Astro 7 application deployed with the Vercel adapter. Its page
+shells are prerendered; the Airthings cards are server islands, and newsletter
+operations remain dynamic API routes.
+
+## Requirements
+
+- Node.js 22.12 or newer
+- pnpm 10
+
+Install from the repository root:
 
 ```sh
-bun create astro@latest -- --template basics
+pnpm install
+cp apps/web/.env.example apps/web/.env.local
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Fill in the local environment values before starting the app.
 
-## 🚀 Project Structure
+## Development
 
-Inside of your Astro project, you'll see the following folders and files:
+```sh
+# Foreground Turbo development workflow
+pnpm dev
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+# Astro 7 managed background server
+pnpm dev:web:background
+pnpm dev:web:status
+pnpm dev:web:logs
+pnpm dev:web:stop
+
+# Structured JSON logs for automation
+pnpm dev:web:json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Astro's background server is the preferred non-interactive workflow. Set
+`ASTRO_DEV_BACKGROUND=0` to disable background management in an environment
+that needs the foreground process.
 
-## 🧞 Commands
+## Verification
 
-All commands are run from the root of the project, from a terminal:
+```sh
+pnpm --filter @alexgodfrey/web check
+pnpm --filter @alexgodfrey/web test:security
+pnpm --filter @alexgodfrey/web build
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+To validate the production CSP before switching it on:
 
-## 👀 Want to learn more?
+```sh
+ASTRO_CSP_MODE=enforce pnpm --filter @alexgodfrey/web build
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Use the generated production artifact for CSP browser testing. Vite's development
+style injection and Astro's development toolbar are not representative of the
+hashed deployment output.
+
+## Runtime architecture
+
+- Static pages explicitly export `prerender = true`.
+- Airthings readings render through `server:defer`; their responses use a
+  120-second edge TTL plus 180 seconds of stale-while-revalidate.
+- Astro's Vercel cache provider backs those route-cache directives. The provider
+  is still experimental upstream, so cache headers and hit behavior should be
+  checked after adapter upgrades.
+- Newsletter APIs are dynamic and fail closed in production unless distributed
+  database rate limiting and Cloudflare Turnstile are configured.
+- The default CSP is report-only and is delivered by both Astro middleware and
+  `vercel.json`. `ASTRO_CSP_MODE=enforce` enables Astro's hashed CSP for scripts
+  and styles. Prism replaces Shiki's inline token styles, and full-page
+  navigation replaces CSP-incompatible view transitions. ChatDB and Cloudflare
+  Turnstile are the only external frame/script exceptions.
+- Aspekta and Berkeley Mono are managed by Astro's Fonts API from
+  `src/assets/fonts`.
+
+See `.env.example` for every required production value and `UPGRADE_LOG.md` at
+the repository root for the migration record.

@@ -10,4 +10,4 @@ export function sampleAllWords(ct: number) {
   return sample(words, ct);
 }
 
-export function sampleProblemWords(words: number) {}
+export function sampleProblemWords(_words: number) {}

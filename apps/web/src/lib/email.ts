@@ -60,7 +60,7 @@ Unsubscribe anytime: reply "unsubscribe" or visit alexgodfrey.com/newsletter.
       subject: 'Welcome to the field notes',
       html,
       text,
-      reply_to: 'me@alexgodfrey.com',
+      replyTo: 'me@alexgodfrey.com',
       tags: [
         { name: 'list', value: 'newsletter' },
         { name: 'source', value: 'newsletter-page' },
@@ -68,8 +68,8 @@ Unsubscribe anytime: reply "unsubscribe" or visit alexgodfrey.com/newsletter.
     });
 
     return { status: 'sent', id: result.data?.id } as const;
-  } catch (error) {
-    console.error('welcome-email-send-failed', error);
-    return { status: 'error', error: (error as Error).message } as const;
+  } catch {
+    console.error('welcome-email-send-failed');
+    return { status: 'error' } as const;
   }
 }

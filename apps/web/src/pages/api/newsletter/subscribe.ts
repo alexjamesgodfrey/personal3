@@ -1,57 +1,51 @@
 import type { APIRoute } from 'astro';
 import { sendWelcomeEmail } from '../../../lib/email';
 import { subscribeToNewsletter } from '../../../lib/newsletter-db';
+import { guardNewsletterRequest } from '../../../lib/security/newsletter-guard';
+import {
+  classifyNewsletterFailure,
+  logNewsletterFailure,
+  newsletterErrorResponse,
+  newsletterRequestId,
+  newsletterSuccessResponse,
+} from '../../../lib/security/newsletter-response';
 
 export const prerender = false;
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export const POST: APIRoute = async ({ request }) => {
-  let email = '';
-  let name: string | undefined;
-
+export const POST: APIRoute = async (context) => {
+  const requestId = newsletterRequestId(context.request);
   try {
-    const body = (await request.json()) as { email?: string; name?: string };
-    email = (body.email || '').trim().toLowerCase();
-    name = body.name?.trim();
-  } catch (error) {
-    return Response.json({ status: 'error', error: 'Invalid request payload.' }, { status: 400 });
-  }
+    const guarded = await guardNewsletterRequest(context, 'subscribe');
+    if (guarded.shortCircuit) {
+      return newsletterSuccessResponse('subscribe', requestId);
+    }
 
-  if (!email || !emailPattern.test(email)) {
-    return Response.json(
-      { status: 'error', error: 'Please provide a valid email address.' },
-      { status: 400 },
+    const { subscriber, isNew } = await subscribeToNewsletter(
+      guarded.payload.email,
+      guarded.payload.name,
+      'newsletter-page',
     );
-  }
-
-  try {
-    const { subscriber, isNew } = await subscribeToNewsletter(email, name, 'newsletter-page');
-
-    let welcomeStatus: 'sent' | 'skipped' | 'error' | undefined = 'skipped';
     if (isNew) {
-      const welcome = await sendWelcomeEmail({ to: subscriber.email, name });
-      welcomeStatus = welcome.status;
+      const welcome = await sendWelcomeEmail({
+        to: subscriber.email,
+        name: guarded.payload.name,
+      });
       if (welcome.status === 'error') {
-        console.error('welcome-email-send-failed', welcome.error);
+        logNewsletterFailure({
+          action: 'subscribe',
+          category: 'welcome-email',
+          requestId,
+        });
       }
     }
 
-    return Response.json({
-      status: 'ok',
-      message: 'Thank you.',
-      welcomeStatus,
-      subscriber: {
-        email: subscriber.email,
-        status: subscriber.status,
-        subscribed_at: subscriber.subscribed_at,
-      },
+    return newsletterSuccessResponse('subscribe', requestId);
+  } catch (error) {
+    logNewsletterFailure({
+      action: 'subscribe',
+      category: classifyNewsletterFailure(error),
+      requestId,
     });
-  } catch (error: unknown) {
-    console.error('newsletter-subscribe-error', error);
-    return Response.json(
-      { status: 'error', error: 'Unable to save your email right now. Please try again shortly.' },
-      { status: 500 },
-    );
+    return newsletterErrorResponse(error, requestId);
   }
 };

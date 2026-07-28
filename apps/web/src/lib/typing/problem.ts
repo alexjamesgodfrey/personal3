@@ -89,5 +89,3 @@ export class ProblemWordsImp implements ProblemWords {
     return [...problemWords, ...allWords];
   }
 }
-
-const w = new ProblemWordsImp();

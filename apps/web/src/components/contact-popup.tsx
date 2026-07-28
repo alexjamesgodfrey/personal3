@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from '@alexgodfrey/ui/components/ui/dialog';
 import { Kbd } from '@alexgodfrey/ui/components/ui/kbd';
-import * as React from 'react';
 import Icon, { type IconName } from './icon-sprite';
 
 interface ContactMethod {
@@ -38,47 +37,14 @@ const contactMethods: ContactMethod[] = [
   },
 ];
 
-export function ContactPopup() {
-  const [open, setOpen] = React.useState(false);
+interface ContactPopupProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
-  // Handle keyboard shortcut (C key)
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'c' || e.key === 'C') {
-        // Don't trigger if modifier keys are pressed
-        if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) {
-          return;
-        }
-        // Don't trigger if user is typing in an input
-        if (
-          e.target instanceof HTMLInputElement ||
-          e.target instanceof HTMLTextAreaElement ||
-          (e.target instanceof HTMLElement && e.target.isContentEditable)
-        ) {
-          return;
-        }
-        setOpen((prev) => !prev);
-      }
-      // Close on Escape
-      if (e.key === 'Escape' && open) {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open]);
-
-  // Expose open function globally for button click
-  React.useEffect(() => {
-    (window as any).openContactPopup = () => setOpen(true);
-    return () => {
-      delete (window as any).openContactPopup;
-    };
-  }, []);
-
+export function ContactPopup({ open, onOpenChange }: ContactPopupProps) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4/5 sm:max-w-md max-h-[80vh] overflow-y-auto z-[999999]">
         <DialogHeader>
           <DialogTitle className="font-mono text-xl">Contact</DialogTitle>
@@ -120,7 +86,7 @@ export function ContactPopup() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
             className="uppercase font-mono text-xs h-7"
           >
             Close

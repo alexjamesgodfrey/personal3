@@ -1,0 +1,26 @@
+---
+import conquerBiomark from '../../assets/images/conquer-biomark.png';
+import { Picture } from 'astro:assets';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+{
+  id === 'conquer-biomark' && (
+    <Picture
+      src={conquerBiomark}
+      formats={['avif']}
+      fallbackFormat="webp"
+      widths={[320, 480, 768]}
+      sizes="(min-width: 768px) 40vw, 100vw"
+      alt="Conquer biomarker analysis interface"
+      loading="lazy"
+      decoding="async"
+      class="h-auto w-full"
+    />
+  )
+}

@@ -1,24 +1,24 @@
 ---
+import oneTwentyOneInterface from '../assets/images/121health.webp';
+import conquerBiomark from '../assets/images/conquer-biomark.png';
+import profilePhoto from '../assets/images/profile.webp';
+import HomeActionButtons from '../components/home-action-buttons.astro';
+import { HomePopups } from '../components/home-popups';
+import ProfileImage from '../components/profile-image.astro';
 import Altum from '../components/work/altum.astro';
 import OneTwentyOne from '../components/work/onetwentyone.astro';
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
 import BlogPreviewCard from '../components/blog-preview-card.astro';
 import SHV from '../components/work/shv.astro';
-import { ContactPopup } from '../components/contact-popup';
-import { ContactPopupTrigger } from '../components/contact-popup-trigger';
-import Co2Card from '../components/grid/airthings/co2.astro';
 import HumidityCard from '../components/grid/airthings/humidity.astro';
 import RadonCard from '../components/grid/airthings/radon.astro';
 import BenjiQuote from '../components/grid/benji-quote.astro';
 import CellPaintVideo from '../components/grid/cellpaint-video.astro';
-import { HumanOrMachine } from '../components/human-or-machine';
+import HumanOrMachine from '../components/human-or-machine.astro';
 import Icon from '../components/icon-sprite';
 import { Logo, Logos } from '../components/utilities/logo';
-import { WorkPopupTrigger } from '../components/work-popup-trigger';
-import { ProfilePopup } from '../components/profile-popup';
-import { ProfileImage } from '../components/profile-image';
-import Section from '../components/work/section.astro';
 import { constructChatdbUrl } from '../lib/construct-chatdb-url';
+import { Picture } from 'astro:assets';
 
 export const prerender = true;
 ---
@@ -49,7 +49,7 @@ export const prerender = true;
           <div class="flex flex-col">
             <div class="flex items-center gap-2 sm:gap-4">
               <h1 class="font-semibold text-xl md:text-3xl text-muted-foreground">Alex Godfrey</h1>
-              <ProfileImage client:load />
+              <ProfileImage />
             </div>
 
             <!-- Description paragraphs - fade out on scroll -->
@@ -75,8 +75,7 @@ export const prerender = true;
               class="flex mt-1 gap-4 items-center"
               style="transition: all 0.3s ease;"
             >
-              <WorkPopupTrigger client:load />
-              <ContactPopupTrigger client:load />
+              <HomeActionButtons />
             </div>
 
             <!-- Skills sidebar - fade out on scroll -->
@@ -108,8 +107,7 @@ export const prerender = true;
             class="flex flex-col gap-2 items-end pointer-events-none absolute right-4 top-0 lg:static lg:right-auto lg:top-auto"
             style="opacity: 0; transition: all 0.3s ease;"
           >
-            <WorkPopupTrigger client:load />
-            <ContactPopupTrigger client:load />
+            <HomeActionButtons />
           </div>
         </div>
       </div>
@@ -168,7 +166,17 @@ export const prerender = true;
                 class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
                 aria-label="Jump to OneTwentyOne section"
               >
-                <img src="/images/conquer-biomark.png" alt="Conquer Biomark" />
+                <Picture
+                  src={conquerBiomark}
+                  formats={['avif']}
+                  fallbackFormat="webp"
+                  widths={[480, 768, 1200, 1600]}
+                  sizes="(min-width: 1024px) 40vw, 100vw"
+                  alt="Conquer biomarker analysis interface"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-auto w-full"
+                />
               </a>
             </div>
             <div
@@ -201,9 +209,15 @@ export const prerender = true;
               class="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
               aria-label="Jump to OneTwentyOne section"
             >
-              <img
-                src="/images/121health.webp"
+              <Picture
+                src={oneTwentyOneInterface}
+                formats={['avif']}
+                fallbackFormat="webp"
+                widths={[284, 426, 568]}
+                sizes="(min-width: 1024px) 20vw, 100vw"
                 alt="121 Health interface"
+                loading="lazy"
+                decoding="async"
                 class="object-cover h-full w-full"
               />
             </a>
@@ -230,14 +244,22 @@ export const prerender = true;
     <!-- <ProfileCard /> -->
   </div>
   <div class="fixed bottom-4 left-[calc(50%-6rem)] z-[99999999]">
-    <HumanOrMachine defaultValue="human" machineLink="/blog/ai" humanLink="/" client:load />
+    <HumanOrMachine defaultValue="human" machineLink="/blog/ai" humanLink="/" />
   </div>
-  <ContactPopup client:load />
-  <ProfilePopup client:load />
+  <HomePopups profileImageSrc={profilePhoto.src} client:idle />
 
   <script>
     let rafId: number;
     type RgbaColor = { r: number; g: number; b: number; a: number };
+    type PopupKind = 'contact' | 'profile';
+    type PopupRequest = {
+      popup: PopupKind;
+      mode: 'open' | 'toggle';
+    };
+    type HomeActionWindow = Window & {
+      __homeActionHandlersAttached?: boolean;
+      __homePopupRequest?: PopupRequest;
+    };
 
     let headerContainer: HTMLElement | null = null;
     let fullstackLabel: HTMLElement | null = null;
@@ -248,9 +270,108 @@ export const prerender = true;
     let skillsLabel: HTMLElement | null = null;
 
     const viewport = window.innerWidth;
-    let initialBorderColor: string | null = null;
+    const triggerPoint = 25;
+    const homeWindow = window as HomeActionWindow;
     let borderColorChannels: RgbaColor | null = null;
     let descriptionMaxHeight = 80;
+
+    const getScrollY = () =>
+      window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+
+    const isTextEntryTarget = (target: EventTarget | null) =>
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      (target instanceof HTMLElement && target.isContentEditable);
+
+    const updateWorkTriggers = (isScrolled: boolean) => {
+      document.querySelectorAll<HTMLElement>('[data-work-trigger]').forEach((trigger) => {
+        const label = trigger.querySelector<HTMLElement>('[data-work-label]');
+        const shortcut = trigger.querySelector<HTMLElement>('[data-work-shortcut]');
+
+        if (label) {
+          label.textContent = isScrolled ? 'Resume' : 'View Work';
+        }
+        if (shortcut) {
+          shortcut.textContent = isScrolled ? 'R' : 'W';
+        }
+      });
+    };
+
+    const scrollToWork = () => {
+      const shvElement = document.getElementById('shv-section');
+      if (!shvElement) {
+        return;
+      }
+
+      const rect = shvElement.getBoundingClientRect();
+      const elementTop = window.scrollY + rect.top;
+      const offset = Math.max((window.innerHeight - rect.height) / 2, 0);
+      window.scrollTo({ top: Math.max(elementTop - offset, 0), behavior: 'smooth' });
+    };
+
+    const requestPopup = (popup: PopupKind, mode: PopupRequest['mode']) => {
+      const request = { popup, mode };
+      homeWindow.__homePopupRequest = request;
+      window.dispatchEvent(
+        new CustomEvent<PopupRequest>('home:popup-request', { detail: request }),
+      );
+    };
+
+    const handleHomeActionClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+
+      if (event.target.closest('[data-profile-trigger]')) {
+        requestPopup('profile', 'open');
+        return;
+      }
+
+      if (event.target.closest('[data-contact-trigger]')) {
+        requestPopup('contact', 'open');
+        return;
+      }
+
+      if (event.target.closest('[data-work-trigger]')) {
+        if (getScrollY() > triggerPoint) {
+          window.location.assign('/resources/resume.pdf');
+        } else {
+          scrollToWork();
+        }
+      }
+    };
+
+    const handleHomeActionKeydown = (event: KeyboardEvent) => {
+      if (
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        event.shiftKey ||
+        isTextEntryTarget(event.target)
+      ) {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+      const isScrolled = getScrollY() > triggerPoint;
+
+      if (key === 'c') {
+        event.preventDefault();
+        requestPopup('contact', 'toggle');
+      } else if (key === 'w' && !isScrolled) {
+        event.preventDefault();
+        scrollToWork();
+      } else if (key === 'r' && isScrolled) {
+        event.preventDefault();
+        window.location.assign('/resources/resume.pdf');
+      }
+    };
+
+    if (!homeWindow.__homeActionHandlersAttached) {
+      document.addEventListener('click', handleHomeActionClick);
+      window.addEventListener('keydown', handleHomeActionKeydown);
+      homeWindow.__homeActionHandlersAttached = true;
+    }
 
     const assignElements = () => {
       headerContainer = document.getElementById('header-container');
@@ -260,7 +381,6 @@ export const prerender = true;
       actionButtonsRight = document.getElementById('action-buttons-right');
       skillsSidebar = document.getElementById('skills-sidebar');
       skillsLabel = document.getElementById('skills-label');
-      initialBorderColor = null;
       borderColorChannels = null;
       if (descriptionText) {
         descriptionMaxHeight = descriptionText.scrollHeight;
@@ -275,7 +395,6 @@ export const prerender = true;
       }
 
       const computed = getComputedStyle(fullstackLabel).borderLeftColor;
-      initialBorderColor = computed;
       const match = computed.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
 
       if (!match) {
@@ -304,12 +423,12 @@ export const prerender = true;
     };
 
     const updateHeader = () => {
-      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      const scrollY = getScrollY();
 
-      const triggerPoint = 25;
       const transitionDuration = 25;
 
       const progress = Math.min(Math.max((scrollY - triggerPoint) / transitionDuration, 0), 1);
+      updateWorkTriggers(scrollY > triggerPoint);
 
       if (
         !headerContainer ||
@@ -388,15 +507,6 @@ export const prerender = true;
     // Listen to all possible scroll events
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('scroll', onScroll, { passive: true });
-
-    // Handle Astro view transitions
-    const reinitializeHeader = () => {
-      assignElements();
-      updateHeader();
-    };
-
-    document.addEventListener('astro:after-swap', reinitializeHeader);
-    document.addEventListener('astro:page-load', reinitializeHeader);
 
     // Initial call
     updateHeader();

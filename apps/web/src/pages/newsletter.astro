@@ -5,6 +5,8 @@ import { NewsletterForm } from '../components/newsletter-form';
 const title = 'Newsletter | Alex Godfrey';
 const description =
   'Signal-over-noise updates on what I am building, reading, and testing in longevity-focused software.';
+
+export const prerender = true;
 ---
 
 <Layout title={title} description={description}>
@@ -58,7 +60,7 @@ const description =
       </div>
 
       <div class="relative grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr,0.65fr]">
-        <NewsletterForm client:load className="h-full" />
+        <NewsletterForm client:visible className="h-full" />
       </div>
     </section>
   </main>

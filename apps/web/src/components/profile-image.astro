@@ -1,0 +1,29 @@
+---
+import profileImage from '../assets/images/profile.webp';
+import { Image } from 'astro:assets';
+
+interface Props {
+  class?: string;
+  size?: string;
+}
+
+const { class: className = '', size = 'size-6 sm:size-8' } = Astro.props;
+---
+
+<button
+  type="button"
+  class={`rounded-full cursor-pointer hover:opacity-80 transition-opacity ${className}`}
+  data-profile-trigger
+  aria-label="Open Alex Godfrey's profile photo"
+>
+  <Image
+    src={profileImage}
+    alt="Alex Godfrey"
+    width={32}
+    height={32}
+    densities={[1, 2]}
+    format="webp"
+    loading="eager"
+    class={`${size} rounded-full object-cover`}
+  />
+</button>
