@@ -4,7 +4,7 @@ import { Input } from '@alexgodfrey/ui/components/ui/input';
 import { Label } from '@alexgodfrey/ui/components/ui/label';
 import { cn } from '@alexgodfrey/ui/lib/utils';
 import { PUBLIC_NEWSLETTER_TURNSTILE_SITE_KEY } from 'astro:env/client';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import * as React from 'react';
 
 type TurnstileApi = {
@@ -166,26 +166,8 @@ export function NewsletterForm({ className }: { className?: string }) {
   };
 
   return (
-    <div
-      className={cn(
-        'rounded-xl border border-muted-foreground/20 bg-gradient-to-br from-amber-50/70 via-white to-emerald-50/60 p-6 shadow-sm backdrop-blur-sm dark:from-amber-100/10 dark:via-background dark:to-emerald-100/10',
-        className,
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Field Notes
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold">Join the newsletter</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Occasional dispatches on engineering for longevity, experiments, and readings.
-          </p>
-        </div>
-        <Sparkles className="hidden h-6 w-6 text-amber-500 sm:block" aria-hidden />
-      </div>
-
-      <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+    <div className={cn(className)}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <label className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
           Website
           <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />
@@ -193,14 +175,9 @@ export function NewsletterForm({ className }: { className?: string }) {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <label className="space-y-2 sm:col-span-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="email" className="font-mono text-[11px] uppercase tracking-[0.15em]">
-                Email
-              </Label>
-              <span aria-hidden className="text-[10px] text-muted-foreground/70">
-                Required
-              </span>
-            </div>
+            <Label htmlFor="email" className="font-mono text-xs uppercase text-muted-foreground">
+              Email
+            </Label>
             <Input
               id="email"
               name="email"
@@ -213,7 +190,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           </label>
 
           <label className="space-y-2">
-            <Label htmlFor="name" className="font-mono text-[11px] uppercase tracking-[0.15em]">
+            <Label htmlFor="name" className="font-mono text-xs uppercase text-muted-foreground">
               Name
             </Label>
             <Input
@@ -231,24 +208,21 @@ export function NewsletterForm({ className }: { className?: string }) {
         <div className="flex flex-wrap items-center gap-3">
           <Button
             type="submit"
-            size="lg"
+            variant="outline"
             aria-live="polite"
             disabled={state.status === 'loading' || Boolean(turnstileSiteKey && !turnstileToken)}
-            className="gap-2 rounded-lg px-6 font-semibold uppercase tracking-wide"
+            className="gap-2 uppercase font-mono !shadow-none !bg-background"
           >
             {state.status === 'loading' ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                Adding you...
+                Subscribing...
               </>
             ) : (
-              <>
-                <Sparkles className="h-4 w-4" aria-hidden />
-                Get updates
-              </>
+              'Subscribe'
             )}
           </Button>
-          <p className="text-xs text-muted-foreground">Zero spam. Unsubscribe anytime.</p>
+          <p className="text-xs text-muted-foreground">No spam. Unsubscribe anytime.</p>
         </div>
       </form>
 
@@ -259,7 +233,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           role="status"
         >
           <AlertTitle className="font-semibold">
-            {state.status === 'error' ? 'Something went wrong' : 'You are in'}
+            {state.status === 'error' ? 'Something went wrong' : 'Subscribed'}
           </AlertTitle>
           <AlertDescription>{state.message}</AlertDescription>
         </Alert>

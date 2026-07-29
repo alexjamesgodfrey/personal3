@@ -33,7 +33,7 @@ export async function sendWelcomeEmail({ to, name }: WelcomeArgs) {
   const html = `
     <div style="font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #0f172a; line-height: 1.6; padding: 16px;">
       <p style="font-size: 15px; margin-bottom: 16px;">${greeting}</p>
-      <p style="margin: 0 0 12px 0;">Thanks for hopping onto the field notes list. I'll only send when there's something worth your time-- notes, experiments, and the few links that actually shaped my thinking.</p>
+      <p style="margin: 0 0 12px 0;">Thanks for joining the newsletter. I'll only send when there's something worth your time: what I'm building, reading, and testing.</p>
       <p style="margin: 0 0 12px 0;">If you want to steer topics or say hi, just reply here. I read everything.</p>
       <p style="margin: 0 0 18px 0;">— Alex</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
@@ -43,7 +43,7 @@ export async function sendWelcomeEmail({ to, name }: WelcomeArgs) {
 
   const text = `${greeting}
 
-Thanks for hopping onto the field notes list. I'll only send when there's something worth your time—build notes, experiments, and the few links that actually shaped my thinking.
+Thanks for joining the newsletter. I'll only send when there's something worth your time: what I'm building, reading, and testing.
 
 If you want to steer topics or say hi, just reply here. I read everything.
 
@@ -57,7 +57,7 @@ Unsubscribe anytime: reply "unsubscribe" or visit alexgodfrey.com/newsletter.
     const result = await resend.emails.send({
       from: 'Alex from Godfrey <kiwi@automations.godfrey.email>',
       to,
-      subject: 'Welcome to the field notes',
+      subject: 'Welcome to the newsletter',
       html,
       text,
       replyTo: 'me@alexgodfrey.com',

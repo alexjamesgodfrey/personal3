@@ -168,7 +168,7 @@ Email is the most direct contact method. No form submission or JavaScript is req
 export function renderNewsletterMarkdown(): string {
   return `# Alex Godfrey's newsletter
 
-> Concise field notes on longevity-focused software, personal experiments worth sharing, and useful ideas encountered while building products.
+> Occasional notes on what Alex is building, reading, and testing. Focused on longevity.
 
 - ${markdownLink('Open the subscription page', '/newsletter')}
 - ${markdownLink('Canonical profile', '/')}
