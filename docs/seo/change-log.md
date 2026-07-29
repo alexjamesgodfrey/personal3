@@ -84,14 +84,3 @@ Turnstile was already part of the newsletter's layered anti-spam system, alongsi
 - `NEWSLETTER_TURNSTILE_SECRET_KEY`
 
 The site key is public and used at build/client time. The secret stays server-only and is required for runtime Siteverify validation. Confirm the existing `NEWSLETTER_RATE_LIMIT_SECRET` remains configured, then deploy and repeat the production smoke test before submitting the sitemap.
-
-## Cross-site discovery
-
-- `apps/web/src/lib/site-content.ts`
-  - Added the canonical wedding-gallery URL to the shared resource inventory.
-- `apps/web/src/pages/index.astro`
-  - Added one crawlable, descriptive footer link to the public wedding-gallery
-    entrance.
-- The gallery links back with a visible creator credit and matching `WebSite`
-  creator metadata. The exchange is limited to one contextual link per public
-  homepage; private gallery routes remain excluded from indexing.

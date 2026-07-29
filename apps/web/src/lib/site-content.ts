@@ -104,7 +104,6 @@ export const siteContent = {
     resumePdf: '/resources/resume.pdf',
     recommendationPdf: '/resources/Letter%20of%20rec%20for%20Alex.pdf',
     newsletter: '/newsletter',
-    weddingGallery: 'https://photos.alexgodfrey.com/',
   },
 } as const;
 
