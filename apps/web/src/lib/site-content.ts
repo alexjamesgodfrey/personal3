@@ -1,15 +1,16 @@
 export const SITE_ORIGIN = 'https://www.alexgodfrey.com';
-export const PROFILE_LAST_UPDATED = '2026-07-28';
+export const PROFILE_LAST_UPDATED = '2026-07-29';
 
 export const siteContent = {
   name: 'Alex Godfrey',
   role: 'Fullstack Software Engineer',
   shortRole: 'Fullstack SWE',
   description:
-    'Alex Godfrey is a fullstack software engineer working at the intersection of software, biotechnology, longevity, and AI infrastructure.',
-  education: 'Formally trained in mathematics, computer science, and neuroscience.',
-  educationShort: 'Formally trained in math, CS, and neuroscience.',
-  focus: 'Focused on engineering solutions for longevity.',
+    'Alex Godfrey is a fullstack software engineer building AI infrastructure and biotechnology software with a focus on longevity.',
+  identity: 'Alex Godfrey is a fullstack software engineer on Sutter Hill Ventures’ internal team.',
+  education: 'He studied mathematics, computer science, and neuroscience at Cornell University.',
+  educationShort: 'Math, CS, and neuroscience at Cornell University.',
+  focus: 'He builds AI infrastructure and biotechnology software focused on longevity.',
   contact: [
     {
       id: 'email',
@@ -103,11 +104,20 @@ export const siteContent = {
     resumePdf: '/resources/resume.pdf',
     recommendationPdf: '/resources/Letter%20of%20rec%20for%20Alex.pdf',
     newsletter: '/newsletter',
+    weddingGallery: 'https://photos.alexgodfrey.com/',
   },
 } as const;
 
 export function absoluteUrl(pathOrUrl: string): string {
   return new URL(pathOrUrl, SITE_ORIGIN).toString();
+}
+
+export function canonicalPathname(pathname: string): string {
+  if (pathname === '/') {
+    return pathname;
+  }
+
+  return pathname.replace(/\/+$/, '') || '/';
 }
 
 export function profilePageStructuredData(profileImageUrl: string) {
@@ -123,6 +133,9 @@ export function profilePageStructuredData(profileImageUrl: string) {
         name: siteContent.name,
         description: siteContent.description,
         inLanguage: 'en-US',
+        about: {
+          '@id': `${SITE_ORIGIN}/#alex-godfrey`,
+        },
       },
       {
         '@type': 'ProfilePage',
@@ -136,6 +149,8 @@ export function profilePageStructuredData(profileImageUrl: string) {
           '@type': 'Person',
           '@id': `${SITE_ORIGIN}/#alex-godfrey`,
           name: siteContent.name,
+          givenName: 'Alex',
+          familyName: 'Godfrey',
           url: `${SITE_ORIGIN}/`,
           image: profileImageUrl,
           jobTitle: siteContent.role,
@@ -155,6 +170,11 @@ export function profilePageStructuredData(profileImageUrl: string) {
           worksFor: {
             '@type': 'Organization',
             name: shv.organization,
+          },
+          alumniOf: {
+            '@type': 'CollegeOrUniversity',
+            name: 'Cornell University',
+            url: 'https://www.cornell.edu/',
           },
           affiliation: {
             '@id': `${SITE_ORIGIN}/#onetwentyone`,

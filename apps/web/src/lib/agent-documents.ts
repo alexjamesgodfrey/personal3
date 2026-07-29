@@ -23,7 +23,7 @@ function renderWritingLinks(notes: PublishedNote[]): string {
   return notes
     .map((note) => {
       const slug = noteSlugFromId(note.id);
-      return `- [${note.data.title}](${absoluteUrl(`/blog/${slug}.md`)}): ${note.data.description}`;
+      return `- [${note.data.title}](${absoluteUrl(`/blog/${slug}`)}): ${note.data.description} ([Markdown alternate](${absoluteUrl(`/blog/${slug}.md`)}))`;
     })
     .join('\n');
 }
@@ -183,10 +183,10 @@ export function renderIndexMarkdown(notes: PublishedNote[]): string {
 
 ## Primary documents
 
-- ${markdownLink('Profile', '/about.md')}: Biography, current role, experience, projects, technical focus, and contact links.
-- ${markdownLink('Résumé', '/resume.md')}: Concise professional history in Markdown.
-- ${markdownLink('Selected work', '/work.md')}: Organizations, roles, projects, and evidence.
-- ${markdownLink('Contact', '/contact.md')}: Direct email and verified social profiles.
+- ${markdownLink('Profile', '/')}: Canonical biography, current role, experience, projects, technical focus, and contact links. [Markdown alternate](${absoluteUrl('/about.md')}).
+- ${markdownLink('Résumé PDF', siteContent.resources.resumePdf)}: Current résumé. [Markdown alternate](${absoluteUrl('/resume.md')}).
+- ${markdownLink('Selected work', '/#shv-section')}: Organizations, roles, projects, and evidence. [Markdown alternate](${absoluteUrl('/work.md')}).
+- ${markdownLink('Contact', '/contact')}: Direct email and verified social profiles. [Markdown alternate](${absoluteUrl('/contact.md')}).
 
 ## Writing
 
@@ -194,7 +194,7 @@ ${renderWritingLinks(notes)}
 
 ## Optional
 
-- ${markdownLink('Newsletter', '/newsletter.md')}: Newsletter description and subscription route.
+- ${markdownLink('Newsletter', '/newsletter')}: Newsletter description and subscription route. [Markdown alternate](${absoluteUrl('/newsletter.md')}).
 - ${markdownLink('Full site context', '/llms-full.txt')}: Combined machine-readable profile, work, contact, and published writing.
 - ${markdownLink('Visual homepage', '/')}: Human-oriented portfolio.`;
 }
@@ -204,13 +204,13 @@ export function renderLlmsTxt(notes: PublishedNote[]): string {
 
 > ${siteContent.description}
 
-Use the documents below for current, public information. Prefer Markdown URLs when available. The visual site contains the same core facts plus interactive presentation.
+Use the documents below for current, public information. Cite the canonical HTML URLs; Markdown URLs are retrieval alternates containing the same public facts.
 
 ## Profile
 
-- [Canonical profile](${absoluteUrl('/about.md')}): Biography, current role, experience, skills, projects, and verified contact links.
-- [Résumé](${absoluteUrl('/resume.md')}): Professional history in concise Markdown.
-- [Selected work](${absoluteUrl('/work.md')}): Roles, projects, collaborations, and supporting links.
+- [Canonical profile](${absoluteUrl('/')}): Biography, current role, experience, skills, projects, and verified contact links. [Markdown alternate](${absoluteUrl('/about.md')}).
+- [Résumé PDF](${absoluteUrl(siteContent.resources.resumePdf)}): Current professional history. [Markdown alternate](${absoluteUrl('/resume.md')}).
+- [Selected work](${absoluteUrl('/#shv-section')}): Roles, projects, collaborations, and supporting links. [Markdown alternate](${absoluteUrl('/work.md')}).
 
 ## Writing
 
@@ -218,11 +218,11 @@ ${renderWritingLinks(notes)}
 
 ## Contact
 
-- [Contact](${absoluteUrl('/contact.md')}): Direct email, GitHub, and LinkedIn links.
+- [Contact](${absoluteUrl('/contact')}): Direct email, GitHub, and LinkedIn links. [Markdown alternate](${absoluteUrl('/contact.md')}).
 
 ## Optional
 
-- [Newsletter](${absoluteUrl('/newsletter.md')}): Newsletter scope and subscription page.
+- [Newsletter](${absoluteUrl('/newsletter')}): Newsletter scope and subscription page. [Markdown alternate](${absoluteUrl('/newsletter.md')}).
 - [Full context](${absoluteUrl('/llms-full.txt')}): Combined contents of the primary machine-readable documents.
 - [Visual website](${SITE_ORIGIN}/): Human-oriented portfolio.`;
 }

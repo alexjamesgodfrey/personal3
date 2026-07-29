@@ -6,8 +6,13 @@ import {
   renderLlmsTxt,
   renderNoteMarkdown,
 } from '@alexgodfrey/web/lib/agent-documents';
+import { markdownResponse, textResponse } from '@alexgodfrey/web/lib/agent-http';
 import type { PublishedNote } from '@alexgodfrey/web/lib/published-notes';
-import { profilePageStructuredData, SITE_ORIGIN } from '@alexgodfrey/web/lib/site-content';
+import {
+  canonicalPathname,
+  profilePageStructuredData,
+  SITE_ORIGIN,
+} from '@alexgodfrey/web/lib/site-content';
 
 const note = {
   id: 'red-bull/index.mdx',
@@ -67,8 +72,29 @@ describe('agent-facing documents', () => {
     const serialized = JSON.stringify(data);
 
     assert.match(serialized, /"@type":"ProfilePage"/);
+    assert.match(serialized, /"givenName":"Alex"/);
+    assert.match(serialized, /"familyName":"Godfrey"/);
+    assert.match(serialized, /Cornell University/);
     assert.match(serialized, /linkedin\.com\/in\/alexgodfreyapi/);
     assert.match(serialized, /github\.com\/alexjamesgodfrey/);
     assert.doesNotMatch(serialized, /"https:\/\/alexgodfrey\.com/);
+  });
+
+  it('normalizes canonical paths to one slashless URL policy', () => {
+    assert.equal(canonicalPathname('/'), '/');
+    assert.equal(canonicalPathname('/contact'), '/contact');
+    assert.equal(canonicalPathname('/contact/'), '/contact');
+    assert.equal(canonicalPathname('/blog/red-bull///'), '/blog/red-bull');
+  });
+
+  it('keeps machine-readable alternates crawlable but out of the search index', () => {
+    const markdown = markdownResponse('# Profile', '/');
+    const llms = textResponse('# Profile', 'text/markdown; charset=utf-8', {
+      'X-Robots-Tag': 'noindex, follow',
+    });
+
+    assert.equal(markdown.headers.get('x-robots-tag'), 'noindex, follow');
+    assert.equal(markdown.headers.get('link'), `<${SITE_ORIGIN}/>; rel="canonical"`);
+    assert.equal(llms.headers.get('x-robots-tag'), 'noindex, follow');
   });
 });

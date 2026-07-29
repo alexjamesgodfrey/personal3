@@ -6,4 +6,6 @@ import type { APIRoute } from 'astro';
 export const prerender = true;
 
 export const GET: APIRoute = async () =>
-  textResponse(renderLlmsTxt(await getPublishedNotes()), 'text/markdown; charset=utf-8');
+  textResponse(renderLlmsTxt(await getPublishedNotes()), 'text/markdown; charset=utf-8', {
+    'X-Robots-Tag': 'noindex, follow',
+  });

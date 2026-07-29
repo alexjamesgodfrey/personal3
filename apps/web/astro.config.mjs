@@ -56,6 +56,21 @@ const contentSecurityPolicy =
 export default defineConfig({
   integrations: [react(), mdx()],
   site: 'https://www.alexgodfrey.com',
+  trailingSlash: 'never',
+  redirects: {
+    '/old': {
+      destination: '/',
+      status: 308,
+    },
+    '/blog/ai': {
+      destination: '/',
+      status: 308,
+    },
+    '/blog/ascorbic-acid-ph': {
+      destination: '/blog/red-bull',
+      status: 308,
+    },
+  },
   logger: configEnvironment.ASTRO_LOG_FORMAT === 'json' ? logHandlers.json() : undefined,
   // Shiki emits inline token styles that cannot be covered by Astro's generated
   // CSP hashes. Prism uses classes and remains compatible with enforcement.
@@ -165,5 +180,5 @@ export default defineConfig({
   },
 
   output: 'server',
-  adapter: vercel({ staticHeaders: cspMode === 'enforce' }),
+  adapter: vercel({ staticHeaders: true }),
 });

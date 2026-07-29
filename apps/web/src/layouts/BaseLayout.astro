@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import { canonicalPathname } from '../lib/site-content';
 import '../styles/global.css';
 
 interface Props {
@@ -33,7 +34,7 @@ const {
 } = Astro.props;
 
 const siteOrigin = Astro.site ?? Astro.url.origin;
-const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
+const canonicalURL = new URL(canonicalPathname(Astro.url.pathname), siteOrigin);
 const ogImageURL = new URL(ogImage, siteOrigin);
 ---
 
@@ -41,7 +42,7 @@ const ogImageURL = new URL(ogImage, siteOrigin);
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Font cssVariable="--font-aspekta" preload={[{ weight: 400 }, { weight: 600 }]} />
     <Font cssVariable="--font-berkeley-mono" preload />

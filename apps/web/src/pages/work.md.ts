@@ -4,4 +4,4 @@ import type { APIRoute } from 'astro';
 
 export const prerender = true;
 
-export const GET: APIRoute = () => markdownResponse(renderWorkMarkdown(), '/#shv-section');
+export const GET: APIRoute = () => markdownResponse(renderWorkMarkdown(), '/');

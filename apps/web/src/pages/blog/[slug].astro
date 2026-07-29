@@ -1,14 +1,8 @@
 ---
 import Layout from '@alexgodfrey/web/layouts/BaseLayout.astro';
 import { socialImageVersion } from '@alexgodfrey/web/lib/og/note-social-image';
-import {
-  getPublishedNotes,
-  publishedNoteSlug,
-} from '@alexgodfrey/web/lib/published-notes';
-import {
-  absoluteUrl,
-  articleStructuredData,
-} from '@alexgodfrey/web/lib/site-content';
+import { getPublishedNotes, publishedNoteSlug } from '@alexgodfrey/web/lib/published-notes';
+import { absoluteUrl, articleStructuredData, siteContent } from '@alexgodfrey/web/lib/site-content';
 import { validateNote } from '@alexgodfrey/web/lib/validators';
 import { render } from 'astro:content';
 
@@ -49,7 +43,7 @@ const structuredData = articleStructuredData({
 ---
 
 <Layout
-  title={frontmatter.title}
+  title={`${frontmatter.title} | ${siteContent.name}`}
   description={frontmatter.description}
   ogImage={socialImagePath}
   ogImageAlt={socialImageAlt}
@@ -62,8 +56,8 @@ const structuredData = articleStructuredData({
   structuredData={structuredData}
 >
   <article class="max-w-3xl mx-auto px-4 py-8">
-    <header class="mb-8 relative pt-10 sm:pt-0">
-      <div class="absolute -top-2 right-4 sm:top-0 flex items-center gap-2">
+    <header class="mb-8">
+      <div class="mb-6 flex items-center justify-end gap-2">
         <a
           href={markdownUrl}
           type="text/markdown"
@@ -87,20 +81,27 @@ const structuredData = articleStructuredData({
           <p class="font-mono text-sm text-muted-foreground mb-4">{frontmatter.description}</p>
         )
       }
-      <div class="font-mono text-xs text-muted-foreground">
+      <div
+        class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground"
+      >
+        <a href="/" rel="author" class="underline underline-offset-4 hover:text-foreground">
+          By {siteContent.name}
+        </a>
         <time datetime={frontmatter.pubDate.toISOString()}>
           Published: {frontmatter.pubDate.toISOString().split('T')[0]}
         </time>
         {
           frontmatter.updatedDate && (
-            <time datetime={frontmatter.updatedDate.toISOString()} class="ml-4">
+            <time datetime={frontmatter.updatedDate.toISOString()}>
               Updated: {frontmatter.updatedDate.toISOString().split('T')[0]}
             </time>
           )
         }
       </div>
     </header>
-    <div class="prose prose-invert max-w-none [&_p]:mb-4">
+    <div
+      class="max-w-none [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-xl [&_h2]:font-semibold [&_p]:mb-4 [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-muted-foreground"
+    >
       <Content />
     </div>
   </article>
