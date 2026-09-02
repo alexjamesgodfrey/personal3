@@ -1,6 +1,6 @@
 export enum Logos {
   'Me' = '/logos/me.jpg',
-  'SHV' = '/logos/shv.webp',
+  'SHV' = '/logos/shv-96.webp',
   'OneTwentyOne' = '/logos/121.webp',
   'Altum' = '/logos/leaf.svg',
   'TypeScript' = '/logos/typescript.svg',

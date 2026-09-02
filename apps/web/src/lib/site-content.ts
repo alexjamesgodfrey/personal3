@@ -1,16 +1,16 @@
 export const SITE_ORIGIN = 'https://www.alexgodfrey.com';
-export const PROFILE_LAST_UPDATED = '2026-07-29';
+export const PROFILE_LAST_UPDATED = '2026-09-01';
 
 export const siteContent = {
   name: 'Alex Godfrey',
-  role: 'Fullstack Software Engineer',
-  shortRole: 'Fullstack SWE',
+  role: 'Member of Technical Staff',
+  shortRole: 'Technical Staff',
   description:
-    'Alex Godfrey is a fullstack software engineer building AI infrastructure and biotechnology software with a focus on longevity.',
-  identity: 'Alex Godfrey is a fullstack software engineer on Sutter Hill Ventures’ internal team.',
-  education: 'He studied mathematics, computer science, and neuroscience at Cornell University.',
-  educationShort: 'Math, CS, and neuroscience at Cornell University.',
-  focus: 'He builds AI infrastructure and biotechnology software focused on longevity.',
+    'Alex Godfrey is a member of technical staff at Sutter Hill Ventures, building at the intersection of AI and biotechnology with a focus on aging.',
+  identity: "I'm a member of technical staff at Sutter Hill Ventures.",
+  education: 'I studied mathematics, computer science, and neuroscience at Cornell University.',
+  educationShort: 'I studied math, CS, and neuroscience at Cornell University.',
+  focus: "Right now I'm building in AI x bio, specifically around aging.",
   contact: [
     {
       id: 'email',
@@ -40,7 +40,7 @@ export const siteContent = {
       location: 'Palo Alto',
       startYear: 2025,
       dateLabel: '2025–present',
-      role: 'Software Engineer, Internal Team',
+      role: 'Member of Technical Staff',
       summary:
         'Sutter Hill Ventures employs a small internal engineering team to explore frontier technology and build products with portfolio companies.',
       focus: 'Alex has worked extensively on systems built around Model Context Protocol.',
@@ -159,12 +159,12 @@ export function profilePageStructuredData(profileImageUrl: string) {
             .filter((item) => item.href.startsWith('https://'))
             .map((item) => item.href),
           knowsAbout: [
-            'Full-stack software engineering',
+            'Software engineering',
             'Model Context Protocol',
-            'AI infrastructure',
+            'AI for biotechnology',
             'Health data infrastructure',
             'Biotechnology',
-            'Longevity',
+            'Biology of aging',
           ],
           worksFor: {
             '@type': 'Organization',

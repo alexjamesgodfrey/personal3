@@ -82,7 +82,7 @@ export function renderAboutMarkdown(notes: PublishedNote[]): string {
 > ${siteContent.description}
 
 - **Current role:** ${siteContent.work.shv.role} at ${siteContent.work.shv.organization}
-- **Focus:** Software, biotechnology, longevity, and AI infrastructure
+- **Focus:** AI, biotechnology, and aging
 - **Profile last verified:** ${PROFILE_LAST_UPDATED}
 - ${markdownLink('Visual homepage', '/')}
 - ${markdownLink('Résumé in Markdown', '/resume.md')}
@@ -179,7 +179,7 @@ Subscription requires an email address and explicit form submission on the visua
 export function renderIndexMarkdown(notes: PublishedNote[]): string {
   return `# alexgodfrey.com
 
-> Canonical public information about ${siteContent.name}, a ${siteContent.role.toLowerCase()} working across software, biotechnology, longevity, and AI infrastructure.
+> Canonical public information about ${siteContent.name}, a ${siteContent.role.toLowerCase()} building at the intersection of AI and biotechnology, specifically around aging.
 
 ## Primary documents
 
